@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "vuepress dev docs",
     "build": "vuepress build docs",
+    "commit": "npx git cz",
     "deploy": "sh build.sh"
   },
   "repository": {
@@ -16,8 +17,15 @@
   },
   "keywords": [],
   "author": "NLRX",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
+    "commitizen": "^4.0.3",
+    "cz-conventional-changelog": "^3.0.2",
     "vuepress": "^1.2.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
