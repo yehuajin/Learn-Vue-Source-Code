@@ -40,7 +40,7 @@ let car = {
 	})
 ```
 
-通过`Object.defineProperty() `方法给`car`定义了一个`price`属性，并把这个属性的读和写分别使用`get()`和`set()`进行拦截，每当该属性进行读或写操作的时候就会出发`get()`和`set()`。如下图：
+通过`Object.defineProperty() `方法给`car`定义了一个`price`属性，并把这个属性的读和写分别使用`get()`和`set()`进行拦截，每当该属性进行读或写操作的时候就会触发`get()`和`set()`。如下图：
 
 ![](~@/reactive/1.png)
 
