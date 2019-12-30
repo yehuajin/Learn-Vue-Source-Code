@@ -82,6 +82,10 @@ export class Observer {
  * @param { Any } val 对象的某个key的值
  */
 function defineReactive (obj,key,val) {
+  // 如果只传了obj和key，那么val = obj[key]
+  if (arguments.length === 2) {
+    val = obj[key]
+  }
   if(typeof val === 'object'){
       new Observer(val)
   }
@@ -194,6 +198,9 @@ export function remove (arr, item) {
 
 ```javascript
 function defineReactive (obj,key,val) {
+  if (arguments.length === 2) {
+    val = obj[key]
+  }
   if(typeof val === 'object'){
     new Observer(val)
   }
