@@ -253,7 +253,7 @@ export default class Watcher {
   update () {
     const oldValue = this.value
     this.value = this.get()
-    this.cb.call(this.vm, value, oldValue)
+    this.cb.call(this.vm, this.value, oldValue)
   }
 }
 
