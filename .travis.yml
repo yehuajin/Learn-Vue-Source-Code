@@ -2,7 +2,7 @@ language: node_js
 node_js:
   - "lts/*"
 install:
-    - npm install
+    - yarn
 script:
   - chmod 777 ./deploy.sh
   - ./deploy.sh
