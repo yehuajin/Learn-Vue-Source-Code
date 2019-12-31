@@ -161,7 +161,7 @@ function copyAugment (target: Object, src: Object, keys: Array<string>) {
 
 ### 4.1 把依赖收集到哪里
 
-在第二章中我们说了，数组的依赖也在`getter`中收集，而给数据添加`getter/setter`都是在`Observer`类中完成的，所以我们也应该把依赖收集到`Observer`类中，源码如下：
+在第二章中我们说了，数组数据的依赖也在`getter`中收集，而给数组数据添加`getter/setter`都是在`Observer`类中完成的，所以我们也应该在`Observer`类中收集依赖，源码如下：
 
 ```javascript
 // 源码位置：/src/core/observer/index.js
