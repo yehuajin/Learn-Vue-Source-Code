@@ -1,3 +1,7 @@
+---
+title: 自定义指令
+---
+
 ## 1. 前言
 
 在`Vue`中，除了`Vue`本身为我们提供的一些内置指令之外，`Vue`还支持用户自定义指令。并且用户有两种定义指令的方式：一种是使用全局API——`Vue.directive`来定义全局指令，这种方式定义的指令会被存放在`Vue.options['directives']`中；另一种是在组件内的`directive`选项中定义专为该组件使用的局部指令，这种方式定义的指令会被存放在`vm.$options['directives']`中。
@@ -209,7 +213,7 @@ function normalizeDirectives (dirs,vm):  {
     'v-focus':{
         name : 'focus' ,  // 指令的名称
         value : '',       // 指令的值
-        arg:'',           // 指令的参数    
+        arg:'',           // 指令的参数
         modifiers:{},     // 指令的修饰符
         def:{
             inserted:fn

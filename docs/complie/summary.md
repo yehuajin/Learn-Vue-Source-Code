@@ -1,3 +1,7 @@
+---
+title: 模板编译篇总结
+---
+
 ## 1. 前言
 
 到现在，模板编译的三大阶段就已经全部介绍完毕了，接下来本篇文章，就以宏观角度回顾并梳理一下模板编译整个流程是怎样的。
@@ -20,7 +24,7 @@ Vue.prototype.$mount = function (el){
         // 获取模板，先尝试获取内部模板，如果获取不到则获取外部模板
         let template = options.template
         if (template) {
-            
+
         } else {
              template = getOuterHTML(el)
         }
@@ -89,7 +93,7 @@ export const createCompiler = createCompilerCreator(function baseCompile (
 ```javascript
 export function createCompilerCreator (baseCompile) {
     return function createCompiler (baseOptions) {
-        
+
     }
 }
 ```
@@ -100,7 +104,7 @@ export function createCompilerCreator (baseCompile) {
 function createCompiler (baseOptions) {
     function compile (){
 
-    } 
+    }
     return {
       compile,
       compileToFunctions: createCompileToFunctionFn(compile)

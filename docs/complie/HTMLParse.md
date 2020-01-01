@@ -1,3 +1,7 @@
+---
+title: 模板解析阶段(HTML解析器)
+---
+
 ## 1. 前言
 
 上篇文章中我们说到，在模板解析阶段主线函数`parse`中，根据要解析的内容不同会调用不同的解析器，
@@ -25,7 +29,7 @@ export function parse(template, options) {
     shouldDecodeNewlines: options.shouldDecodeNewlines,
     shouldDecodeNewlinesForHref: options.shouldDecodeNewlinesForHref,
     shouldKeepComment: options.comments,
-    // 当解析到开始标签时，调用该函数  
+    // 当解析到开始标签时，调用该函数
     start (tag, attrs, unary) {
 
     },
@@ -33,11 +37,11 @@ export function parse(template, options) {
     end () {
 
     },
-    // 当解析到文本时，调用该函数  
+    // 当解析到文本时，调用该函数
     chars (text) {
 
     },
-    // 当解析到注释时，调用该函数  
+    // 当解析到注释时，调用该函数
     comment (text) {
 
     }
@@ -62,7 +66,7 @@ export function parse(template, options) {
   start (tag, attrs, unary) {
   	let element = createASTElement(tag, attrs, currentParent)
   }
-  
+
   export function createASTElement (tag,attrs,parent) {
     return {
       type: 1,
@@ -95,7 +99,7 @@ export function parse(template, options) {
          let element = {
              type: 3,
              text
-         } 
+         }
       }
   }
   ```
@@ -169,7 +173,7 @@ function advance (n) {
     html = html.substring(n)
 }
 ```
-为了更加直观地说明 `advance` 的作用，请看下图： 
+为了更加直观地说明 `advance` 的作用，请看下图：
 ![](~@/complie/5.png)
 
 调用 `advance` 函数：
@@ -295,7 +299,7 @@ if (start) {
 
    所谓不符合开始标签的结束特征是指当前剩下的字符串不是以开始标签结束符开头的，我们知道一个开始标签的结束符有可能是一个`>`（非自闭合标签），也有可能是`/>`（自闭合标签），如果剩下的字符串（如`></div>`）以开始标签的结束符开头，那么就表示标签属性已经被提取完毕了。
 
-   
+
 
 2. 解析标签是否是自闭合
 
@@ -360,7 +364,7 @@ function parseStartTag () {
       /**
        * <div a=1 b=2 c=3></div>
        * 从<div之后到开始标签的结束符号'>'之前，一直匹配属性attrs
-       * 所有属性匹配完之后，html字符串还剩下 
+       * 所有属性匹配完之后，html字符串还剩下
        * 自闭合标签剩下：'/>'
        * 非自闭合标签剩下：'></div>'
        */
@@ -551,7 +555,7 @@ if (endTagMatch) {
 let textEnd = html.indexOf('<')
 // '<' 在第一个位置，为其余5种类型
 if (textEnd === 0) {
-    // ... 
+    // ...
 }
 // '<' 不在第一个位置，文本开头
 if (textEnd >= 0) {
@@ -610,7 +614,7 @@ while (
     !comment.test(rest) &&
     !conditionalComment.test(rest)
 ) {
-    
+
 }
 ```
 
@@ -643,7 +647,7 @@ while (
 
 ## 4. 如何保证AST节点层级关系
 
-上一章节我们介绍了`HTML`解析器是如何解析各种不同类型的内容并且调用钩子函数创建不同类型的`AST`节点。此时你可能会有个疑问，我们上面创建的`AST`节点都是单独创建且分散的，而真正的`DOM`节点都是有层级关系的，那如何来保证`AST`节点的层级关系与真正的`DOM`节点相同呢？ 
+上一章节我们介绍了`HTML`解析器是如何解析各种不同类型的内容并且调用钩子函数创建不同类型的`AST`节点。此时你可能会有个疑问，我们上面创建的`AST`节点都是单独创建且分散的，而真正的`DOM`节点都是有层级关系的，那如何来保证`AST`节点的层级关系与真正的`DOM`节点相同呢？
 
 关于这个问题，`Vue`也注意到了。`Vue`在`HTML`解析器的开头定义了一个栈`stack`，这个栈的作用就是用来维护`AST`节点层级的，那么它是怎么维护的呢？通过前文我们知道，`HTML`解析器在从前向后解析模板字符串时，每当遇到开始标签时就会调用`start`钩子函数，那么在`start`钩子函数内部我们可以将解析得到的开始标签推入栈中，而每当遇到结束标签时就会调用`end`钩子函数，那么我们也可以在`end`钩子函数内部将解析得到的结束标签所对应的开始标签从栈中弹出。请看如下例子：
 
@@ -664,7 +668,7 @@ while (
 <div><p><span></p></div>
 ```
 
-按照上面的流程解析这个模板字符串时，当解析到结束标签`</p>`时，此时栈顶的标签应该是`p`才对，而现在是`span`，那么就说明`span`标签没有被正确闭合，此时控制台就会抛出警告：‘tag  has no matching end tag.’相信这个警告你一定不会陌生。这就是栈的第二个用途： 检测模板字符串中是否有未正确闭合的标签。 
+按照上面的流程解析这个模板字符串时，当解析到结束标签`</p>`时，此时栈顶的标签应该是`p`才对，而现在是`span`，那么就说明`span`标签没有被正确闭合，此时控制台就会抛出警告：‘tag  has no matching end tag.’相信这个警告你一定不会陌生。这就是栈的第二个用途： 检测模板字符串中是否有未正确闭合的标签。
 
 OK，有了这个栈的概念之后，我们再回看上一章`HTML`解析器解析不同内容的代码。
 
@@ -701,28 +705,28 @@ function parseHTML(html, options) {
             if (textEnd === 0) {
                 // 解析是否是注释
         		if (comment.test(html)) {
-                    
+
                 }
                 // 解析是否是条件注释
                 if (conditionalComment.test(html)) {
-                    
+
                 }
                 // 解析是否是DOCTYPE
                 const doctypeMatch = html.match(doctype)
                 if (doctypeMatch) {
-                    
+
                 }
                 // 解析是否是结束标签
                 const endTagMatch = html.match(endTag)
                 if (endTagMatch) {
-                    
+
                 }
                 // 匹配是否是开始标签
                 const startTagMatch = parseStartTag()
                 if (startTagMatch) {
-                    
+
                 }
-            } 
+            }
             // 如果html字符串不是以'<'开头,则解析文本类型
             let text, rest, next
             if (textEnd >= 0) {
@@ -755,15 +759,15 @@ function parseHTML(html, options) {
 	parseEndTag();
 	//parse 开始标签
 	function parseStartTag() {
-		
+
 	}
 	//处理 parseStartTag 的结果
 	function handleStartTag(match) {
-		
+
 	}
 	//parse 结束标签
 	function parseEndTag(tagName, start, end) {
-		
+
 	}
 }
 ```
@@ -813,7 +817,7 @@ if (html === last) {
 while (html) {
   // 确保即将 parse 的内容不是在纯文本标签里 (script,style,textarea)
   if (!lastTag || !isPlainTextElement(lastTag)) {
-      
+
   } else {
     // parse 的内容是在纯文本标签里 (script,style,textarea)
   }
@@ -933,7 +937,7 @@ if (pos >= 0) {
 	// Remove the open elements from the stack
 	stack.length = pos;
 	lastTag = pos && stack[pos - 1].tag;
-} 
+}
 ```
 
 最后把`pos`位置以后的元素都从`stack`栈中弹出，以及把` lastTag`更新为栈顶元素:
@@ -956,10 +960,10 @@ lastTag = pos && stack[pos - 1].tag;
 
 ```javascript
 if (lowerCasedTagName === 'br') {
-    if (options.start) {   
+    if (options.start) {
         options.start(tagName, [], true, start, end)  // 创建<br>AST节点
     }
-} 
+}
 // 补全p标签并创建AST节点
 if (lowerCasedTagName === 'p') {
     if (options.start) {

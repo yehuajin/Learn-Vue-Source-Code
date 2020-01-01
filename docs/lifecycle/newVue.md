@@ -1,3 +1,7 @@
+---
+title: 初始化阶段(new Vue)
+---
+
 ## 1. 前言
 
 上篇文章中介绍了`Vue`实例的生命周期大致分为4个阶段，那么首先我们先从第一个阶段——初始化阶段开始入手分析。从生命周期流程图中我们可以看到，初始化阶段所做的工作也可大致分为两部分：第一部分是`new Vue()`，也就是创建一个`Vue`实例；第二部分是为创建好的`Vue`实例初始化一些事件、属性、响应式数据等。接下来我们就从源码角度来深入分析一下初始化阶段所做的工作及其内部原理。
@@ -108,7 +112,7 @@ vm.$options = mergeOptions(
 
 
 
- 它实际上就是把 `resolveConstructorOptions(vm.constructor)` 的返回值和 `options` 做合并，`resolveConstructorOptions` 的实现先不考虑，可简单理解为返回 `vm.constructor.options`，相当于 `Vue.options`，那么这个 `Vue.options`又是什么呢，其实在 `initGlobalAPI(Vue)` 的时候定义了这个值，代码在 `src/core/global-api/index.js` 中： 
+ 它实际上就是把 `resolveConstructorOptions(vm.constructor)` 的返回值和 `options` 做合并，`resolveConstructorOptions` 的实现先不考虑，可简单理解为返回 `vm.constructor.options`，相当于 `Vue.options`，那么这个 `Vue.options`又是什么呢，其实在 `initGlobalAPI(Vue)` 的时候定义了这个值，代码在 `src/core/global-api/index.js` 中：
 
 ```javascript
 export function initGlobalAPI (Vue: GlobalAPI) {
@@ -123,7 +127,7 @@ export function initGlobalAPI (Vue: GlobalAPI) {
 }
 ```
 
- 首先通过 `Vue.options = Object.create(null)` 创建一个空对象，然后遍历 `ASSET_TYPES`，`ASSET_TYPES` 的定义在 `src/shared/constants.js` 中： 
+ 首先通过 `Vue.options = Object.create(null)` 创建一个空对象，然后遍历 `ASSET_TYPES`，`ASSET_TYPES` 的定义在 `src/shared/constants.js` 中：
 
 ```javascript
 export const ASSET_TYPES = [
@@ -143,7 +147,7 @@ Vue.options.filters = {}
 
 最后通过 `extend(Vue.options.components, builtInComponents)` 把一些内置组件扩展到 `Vue.options.components` 上，`Vue` 的内置组件目前 有`<keep-alive>`、`<transition>` 和`<transition-group>` 组件，这也就是为什么我们在其它组件中使用这些组件不需要注册的原因。
 
- 那么回到 `mergeOptions` 这个函数，它的定义在 `src/core/util/options.js` 中： 
+ 那么回到 `mergeOptions` 这个函数，它的定义在 `src/core/util/options.js` 中：
 
 ```javascript
 /**
@@ -155,7 +159,7 @@ export function mergeOptions (
   child: Object,
   vm?: Component
 ): Object {
-  
+
   if (typeof child === 'function') {
     child = child.options
   }
@@ -245,7 +249,7 @@ LIFECYCLE_HOOKS.forEach(hook => {
 })
 ```
 
- 这其中的 `LIFECYCLE_HOOKS` 的定义在 `src/shared/constants.js` 中： 
+ 这其中的 `LIFECYCLE_HOOKS` 的定义在 `src/shared/constants.js` 中：
 
 ```javascript
 export const LIFECYCLE_HOOKS = [
@@ -283,13 +287,13 @@ function mergeHook (parentVal,childVal):  {
 }
  ```
 
- 从展开后的代码中可以看到，它的合并策略是这样子的：如果 `childVal`不存在，就返回 `parentVal`；否则再判断是否存在 `parentVal`，如果存在就把 `childVal` 添加到 `parentVal` 后返回新数组；否则返回 `childVal` 的数组。所以回到 `mergeOptions` 函数，一旦 `parent` 和 `child` 都定义了相同的钩子函数，那么它们会把 2 个钩子函数合并成一个数组。 
+ 从展开后的代码中可以看到，它的合并策略是这样子的：如果 `childVal`不存在，就返回 `parentVal`；否则再判断是否存在 `parentVal`，如果存在就把 `childVal` 添加到 `parentVal` 后返回新数组；否则返回 `childVal` 的数组。所以回到 `mergeOptions` 函数，一旦 `parent` 和 `child` 都定义了相同的钩子函数，那么它们会把 2 个钩子函数合并成一个数组。
 
 那么问题来了，为什么要把相同的钩子函数转换成数组呢？这是因为`Vue`允许用户使用`Vue.mixin`方法（关于该方法会在后面章节中介绍）向实例混入自定义行为，`Vue`的一些插件通常都是这么做的。所以当`Vue.mixin`和用户在实例化`Vue`时，如果设置了同一个钩子函数，那么在触发钩子函数时，就需要同时触发这个两个函数，所以转换成数组就是为了能在同一个生命周期钩子列表中保存多个钩子函数。
 
 ## 4. callHook函数如何触发钩子函数
 
-关于`callHook`函数如何触发钩子函数的问题，我们只需看一下该函数的实现源码即可，该函数的源码位于`src/core/instance/lifecycle.js` 中，如下： 
+关于`callHook`函数如何触发钩子函数的问题，我们只需看一下该函数的实现源码即可，该函数的源码位于`src/core/instance/lifecycle.js` 中，如下：
 
 ```javascript
 export function callHook (vm: Component, hook: string) {
