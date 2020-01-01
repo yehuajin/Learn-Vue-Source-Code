@@ -56,7 +56,7 @@ export class Observer {
       } else {
         copyAugment(value, arrayMethods, arrayKeys)  /*定义（覆盖）目标对象或数组的某一个方法*/
       }
-      /*如果是数组则需要遍历数组的每一个成员进行observe*/
+      /*如果是数组则需要遍历数组,将数组中的所有元素都转化为可被侦测的响应式*/
       this.observeArray(value)
     } else {
       /*如果是对象则直接walk进行绑定*/
