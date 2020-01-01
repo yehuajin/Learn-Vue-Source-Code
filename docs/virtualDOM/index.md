@@ -12,7 +12,7 @@
 
    ```javascript
    <div class="a" id="b">我是内容</div>
-   
+
    {
      tag:'div',        // 元素标签
      attrs:{           // 属性
@@ -81,8 +81,8 @@ export default class VNode {
     this.ns = undefined            /*当前节点的名字空间*/
     this.context = context          /*当前组件节点对应的Vue实例*/
     this.fnContext = undefined       /*函数式组件对应的Vue实例*/
-    this.fnOptions = undefined      
-    this.fnScopeId = undefined          
+    this.fnOptions = undefined
+    this.fnScopeId = undefined
     this.key = data && data.key           /*节点的key属性，被当作节点的标志，用以优化*/
     this.componentOptions = componentOptions   /*组件的option选项*/
     this.componentInstance = undefined       /*当前节点对应的组件的实例*/
@@ -148,7 +148,7 @@ export function createTextVNode (val: string | number) {
 
 #### 3.2.3 克隆节点
 
-克隆节点就是把一个已经存在的节点复制一份出来，它主要是为了做模板编译优化时使用，这个后面我们会说道。关于克隆节点的描述，源码如下：
+克隆节点就是把一个已经存在的节点复制一份出来，它主要是为了做模板编译优化时使用，这个后面我们会说到。关于克隆节点的描述，源码如下：
 
 ```javascript
 // 创建克隆节点
