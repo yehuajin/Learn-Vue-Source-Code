@@ -1,3 +1,7 @@
+---
+title: keep-alive
+---
+
 ## 1. 前言
 
 `<keep-alive>` 是 `Vue` 实现的一个内置组件，也就是说 `Vue` 源码不仅实现了一套组件化的机制，也实现了一些内置组件，关于`<keep-alive>`组件，官网如下介绍：
@@ -362,7 +366,7 @@ if (cache[key]) {
     /* 调整该组件key的顺序，将其从原来的地方删掉并重新放在最后一个 */
     remove(keys, key)
     keys.push(key)
-} 
+}
 /* 如果没有命中缓存，则将其设置进缓存 */
 else {
     cache[key] = vnode
@@ -379,7 +383,7 @@ vnode.data.keepAlive = true
 首先获取组件的`key`值：
 
 ```javascript
-const key = vnode.key == null? 
+const key = vnode.key == null?
 componentOptions.Ctor.cid + (componentOptions.tag ? `::${componentOptions.tag}` : '')
 : vnode.key
 ```
@@ -393,7 +397,7 @@ if (cache[key]) {
     /* 调整该组件key的顺序，将其从原来的地方删掉并重新放在最后一个 */
     remove(keys, key)
     keys.push(key)
-} 
+}
 ```
 
 直接从缓存中拿 `vnode` 的组件实例，此时重新调整该组件key的顺序，将其从原来的地方删掉并重新放在`this.keys`中最后一个。
@@ -450,10 +454,10 @@ let A = {
   	console.log('Comp A mounted')
   },
   activated(){
-  	console.log('Comp A activated')  
+  	console.log('Comp A activated')
   },
   deactivated(){
-  	console.log('Comp A deactivated')  
+  	console.log('Comp A deactivated')
   }
 }
 
@@ -466,10 +470,10 @@ let B = {
   	console.log('Comp B mounted')
   },
   activated(){
-  	console.log('Comp B activated')  
+  	console.log('Comp B activated')
   },
   deactivated(){
-  	console.log('Comp B deactivated')  
+  	console.log('Comp B deactivated')
   }
 }
 

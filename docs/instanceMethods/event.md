@@ -1,3 +1,7 @@
+---
+title: 事件相关的方法
+---
+
 ## 0. 前言
 
 与事件相关的实例方法有4个，分别是`vm.$on`、`vm.$emit`、`vm.$off`和`vm.$once`。它们是在`eventsMixin`函数中挂载到`Vue`原型上的，代码如下：
@@ -13,7 +17,7 @@ export function eventsMixin (Vue) {
 
 当执行`eventsMixin`函数后，会向`Vue`原型上挂载上述4个实例方法。
 
- 接下来，我们就来分析这4个与事件相关的实例方法其内部的原理都是怎样的。 
+ 接下来，我们就来分析这4个与事件相关的实例方法其内部的原理都是怎样的。
 
 ## 1. vm.$on
 
@@ -92,7 +96,7 @@ else {
 export function initEvents (vm: Component) {
     vm._events = Object.create(null)
     // ...
-    
+
 }
 ```
 

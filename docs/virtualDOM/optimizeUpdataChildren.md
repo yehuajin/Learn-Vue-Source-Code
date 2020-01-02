@@ -1,3 +1,7 @@
+---
+title: 优化更新子节点
+---
+
 ## 1. 前言
 
 在上一篇文章中，我们介绍了当新的`VNode`与旧的`oldVNode`都是元素节点并且都包含子节点时，`Vue`对子节点是
@@ -96,12 +100,12 @@ OK，以上就是子节点对比更新优化策略种的4种情况，如果以�
     let oldEndIdx = oldCh.length - 1   // oldChildren结束索引
     let oldStartVnode = oldCh[0]        // oldChildren中所有未处理节点中的第一个
     let oldEndVnode = oldCh[oldEndIdx]   // oldChildren中所有未处理节点中的最后一个
-    
+
     let newStartIdx = 0               // newChildren开始索引
     let newEndIdx = newCh.length - 1   // newChildren结束索引
     let newStartVnode = newCh[0]        // newChildren中所有未处理节点中的第一个
     let newEndVnode = newCh[newEndIdx]  // newChildren中所有未处理节点中的最后一个
-    
+
     let oldKeyToIdx, idxInOld, vnodeToMove, refElm
 
     // removeOnly is a special flag used only by <transition-group>
@@ -213,7 +217,7 @@ OK，有了这个概念后，我们开始读源码：
    // 以"新前"、"新后"、"旧前"、"旧后"的方式开始比对节点
    while (oldStartIdx <= oldEndIdx && newStartIdx <= newEndIdx) {
    	if (isUndef(oldStartVnode)) {
-           oldStartVnode = oldCh[++oldStartIdx] 
+           oldStartVnode = oldCh[++oldStartIdx]
          }
    }
    ```
@@ -223,7 +227,7 @@ OK，有了这个概念后，我们开始读源码：
    ```javascript
    else if (isUndef(oldEndVnode)) {
        oldEndVnode = oldCh[--oldEndIdx]
-   } 
+   }
    ```
 
 3. 如果新前与旧前节点相同，就把两个节点进行`patch`更新，同时`oldStartIdx`和`newStartIdx`都加1，后移一个位置
@@ -243,18 +247,18 @@ OK，有了这个概念后，我们开始读源码：
        patchVnode(oldEndVnode, newEndVnode, insertedVnodeQueue)
        oldEndVnode = oldCh[--oldEndIdx]
        newEndVnode = newCh[--newEndIdx]
-   } 
+   }
    ```
 
 5. 如果新后与旧前节点相同，先把两个节点进行`patch`更新，然后把旧前节点移动到`oldChilren`中所有未处理节点之后，最后把`oldStartIdx`加1，后移一个位置，`newEndIdx`减1，前移一个位置
 
    ```javascript
-   else if (sameVnode(oldStartVnode, newEndVnode)) { 
+   else if (sameVnode(oldStartVnode, newEndVnode)) {
        patchVnode(oldStartVnode, newEndVnode, insertedVnodeQueue)
        canMove && nodeOps.insertBefore(parentElm, oldStartVnode.elm, nodeOps.nextSibling(oldEndVnode.elm))
        oldStartVnode = oldCh[++oldStartIdx]
        newEndVnode = newCh[--newEndIdx]
-   } 
+   }
    ```
 
 6. 如果新前与旧后节点相同，先把两个节点进行`patch`更新，然后把旧后节点移动到`oldChilren`中所有未处理节点之前，最后把`newStartIdx`加1，后移一个位置，`oldEndIdx`减1，前移一个位置
@@ -265,7 +269,7 @@ OK，有了这个概念后，我们开始读源码：
        canMove && nodeOps.insertBefore(parentElm, oldEndVnode.elm, oldStartVnode.elm)
        oldEndVnode = oldCh[--oldEndIdx]
        newStartVnode = newCh[++newStartIdx]
-   } 
+   }
    ```
 
 7. 如果不属于以上四种情况，就进行常规的循环比对`patch`
@@ -276,7 +280,7 @@ OK，有了这个概念后，我们开始读源码：
    if (oldStartIdx > oldEndIdx) {
        refElm = isUndef(newCh[newEndIdx + 1]) ? null : newCh[newEndIdx + 1].elm
        addVnodes(parentElm, refElm, newCh, newStartIdx, newEndIdx, insertedVnodeQueue)
-   } 
+   }
    ```
 
 9. 如果在循环中，`newStartIdx`大于`newEndIdx`了，那就表示`newChildren`比`oldChildren`先循环完毕，那么`oldChildren`里面剩余的节点都是需要删除的节点，把`[oldStartIdx, oldEndIdx]`之间的所有节点都删除
@@ -287,7 +291,7 @@ OK，有了这个概念后，我们开始读源码：
    }
    ```
 
-   
+
 
 OK,处理完毕，可见源码中的处理逻辑跟我们之前分析的逻辑是一样的。
 

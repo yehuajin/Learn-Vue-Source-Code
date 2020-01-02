@@ -1,3 +1,7 @@
+---
+title: Vue中的DOM-Diff
+---
+
 ## 1. 前言
 
 在上一篇文章介绍`VNode`的时候我们说了，`VNode`最大的用途就是在数据变化前后生成真实`DOM`对应的虚拟`DOM`节点，然后就可以对比新旧两份`VNode`，找出差异所在，然后更新有差异的`DOM`节点，最终达到以最少操作真实`DOM`更新视图的目的。而对比新旧两份`VNode`并找出差异的过程就是所谓的`DOM-Diff`过程。`DOM-Diff`算法时整个虚拟`DOM`的核心所在，那么接下来，我们就以源码出发，深入研究一下`Vue`中的`DOM-Diff`过程是怎样的。
@@ -144,19 +148,19 @@ function patchVnode (oldVnode, vnode, insertedVnodeQueue, removeOnly) {
        */
       if (isDef(oldVnode.text)) nodeOps.setTextContent(elm, '')
       addVnodes(elm, null, ch, 0, ch.length - 1, insertedVnodeQueue)
-    } 
+    }
     // 若只有oldnode的子节点存在
     else if (isDef(oldCh)) {
       // 清空DOM中的子节点
       removeVnodes(elm, oldCh, 0, oldCh.length - 1)
-    } 
+    }
     // 若vnode和oldnode都没有子节点，但是oldnode中有文本
     else if (isDef(oldVnode.text)) {
       // 清空oldnode文本
       nodeOps.setTextContent(elm, '')
     }
     // 上面两个判断一句话概括就是，如果vnode中既没有text，也没有子节点，那么对应的oldnode中有什么就清空什么
-  } 
+  }
   // 若有，vnode的text属性与oldVnode的text属性是否相同？
   else if (oldVnode.text !== vnode.text) {
     // 若相同：用vnode的text替换真实DOM的文本

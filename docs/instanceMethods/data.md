@@ -1,3 +1,7 @@
+---
+title: 数据相关的方法
+---
+
 ## 0. 前言
 
 与数据相关的实例方法有3个，分别是`vm.$set`、`vm.$delete`和`vm.$watch`。它们是在`stateMixin`函数中挂载到`Vue`原型上的，代码如下：
@@ -49,7 +53,7 @@ vm.$watch( expOrFn, callback, [options] )
   vm.$watch('a.b.c', function (newVal, oldVal) {
     // 做点什么
   })
-  
+
   // 函数
   vm.$watch(
     function () {
@@ -526,7 +530,7 @@ vm.$delete( target, propertyName/index )
 
   > 在 2.2.0+ 中同样支持在数组上工作。
 
-  
+
 
 - **注意**：  目标对象不能是一个 `Vue` 实例或 ` Vue` 实例的根数据对象。
 

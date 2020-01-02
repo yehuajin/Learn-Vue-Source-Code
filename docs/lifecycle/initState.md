@@ -1,10 +1,14 @@
+---
+title: 初始化阶段(initState)
+---
+
 ## 1. 前言
 
  本篇文章介绍生命周期初始化阶段所调用的第五个初始化函数——`initState`。 从函数名字上来看，这个函数是用来初始化实例状态的，那么什么是实例的状态呢？在前面文章中我们略有提及，在我们日常开发中，在`Vue`组件中会写一些如`props`、`data`、`methods`、`computed`、`watch`选项，我们把这些选项称为实例的状态选项。也就是说，`initState`函数就是用来初始化这些状态的，那么接下来我们就来分析该函数是如何初始化这些状态选项的。
 
 ## 2. initState函数分析
 
-首先我们先来分析`initState`函数，该函数的定义位于源码的`src/core/instance/state.js`中，如下： 
+首先我们先来分析`initState`函数，该函数的定义位于源码的`src/core/instance/state.js`中，如下：
 
 ```javascript
 export function initState (vm: Component) {
@@ -89,14 +93,14 @@ props: {
 		type: String
     }
 }
- 
+
 ```
 
 可以看到，`Vue`给用户提供的`props`选项写法非常自由，根据`Vue`的惯例，写法虽多但是最终处理的时候肯定只处理一种写法，此时你肯定会想到，处理之前先对数据进行规范化，将所有写法都转化成一种写法。对，你没有猜错，同规范化事件一样，在合并属性的时候也进行了`props`数据的规范化。
 
 ### 3.1 规范化数据
 
-`props`数据规范化函数的定义位于源码的`src/core/util/options.js`中，如下： 
+`props`数据规范化函数的定义位于源码的`src/core/util/options.js`中，如下：
 
 ```javascript
 function normalizeProps (options, vm) {
@@ -155,7 +159,7 @@ if (Array.isArray(props)) {
             warn('props must be strings when using array syntax.')
         }
     }
-} 
+}
 ```
 
 如果`props`选项不是数组那就继续判断是不是一个对象，如果是一个对象，那就遍历对象中的每一对键值，拿到每一对键值后，先将键名统一转化成驼峰式命名，然后判断值是否还是一个对象，如果值是对象（写法三），那么就将该键值对存入`res`中；如果值不是对象（写法二），那么就将键名作为`key`，将`{type: null}`作为`value`存入`res`中。如下：
@@ -197,7 +201,7 @@ props: {
 
 ### 3.2 initProps函数分析
 
-将`props`选项规范化完成之后，接下来我们就可以来真正的初始化`props`选项了，`initProps`函数的定义位于源码的`src/core/instance/state.js`中，如下： 
+将`props`选项规范化完成之后，接下来我们就可以来真正的初始化`props`选项了，`initProps`函数的定义位于源码的`src/core/instance/state.js`中，如下：
 
 ```javascript
 function initProps (vm: Component, propsOptions: Object) {
@@ -317,7 +321,7 @@ if (!(key in vm)) {
 
 ### 3.3 validateProp函数分析
 
-`validateProp`函数的定义位于源码的`src/core/util/props.js`中，如下： 
+`validateProp`函数的定义位于源码的`src/core/util/props.js`中，如下：
 
 ```javascript
 export function validateProp (key,propOptions,propsData,vm) {
@@ -437,7 +441,7 @@ let value = propsData[key]
 
 ### 3.4 getPropDefaultValue函数分析
 
-`getPropDefaultValue`函数的定义位于源码的`src/core/util/props.js`中，如下： 
+`getPropDefaultValue`函数的定义位于源码的`src/core/util/props.js`中，如下：
 
 ```javascript
 function getPropDefaultValue (vm, prop, key){
@@ -523,7 +527,7 @@ return typeof def === 'function' && getType(prop.type) !== 'Function'
 
 ### 3.5 assertProp函数分析
 
-`assertProp`函数的定义位于源码的`src/core/util/props.js`中，如下： 
+`assertProp`函数的定义位于源码的`src/core/util/props.js`中，如下：
 
 ```javascript
 function assertProp (prop,name,value,vm,absent) {
@@ -675,7 +679,7 @@ props:{
         // 这个值必须匹配下列字符串中的一个
         return ['success', 'warning', 'danger'].indexOf(value) !== -1
       }
-    } 
+    }
 }
 ```
 
@@ -697,7 +701,7 @@ if (validator) {
 
 ## 4. 初始化methods
 
-初始化`methods`相较而言就比较简单了，它的初始化函数定义位于源码的`src/core/instance/state.js`中，如下： 
+初始化`methods`相较而言就比较简单了，它的初始化函数定义位于源码的`src/core/instance/state.js`中，如下：
 
 ```javascript
 function initMethods (vm, methods) {
@@ -775,7 +779,7 @@ vm[key] = methods[key] == null ? noop : bind(methods[key], vm)
 
 ## 5. 初始化data
 
-初始化`data`也比较简单，它的初始化函数定义位于源码的`src/core/instance/state.js`中，如下： 
+初始化`data`也比较简单，它的初始化函数定义位于源码的`src/core/instance/state.js`中，如下：
 
 ```javascript
 function initData (vm) {
@@ -923,7 +927,7 @@ vm.aDouble // => 4
 
 ### 6.2 initComputed函数分析
 
-了解了计算属性的用法之后，下面我们就来分析一下计算属性的初始化函数`initComputed`的内部原理是怎样的。`initComputed`函数的定义位于源码的`src/core/instance/state.js`中，如下： 
+了解了计算属性的用法之后，下面我们就来分析一下计算属性的初始化函数`initComputed`的内部原理是怎样的。`initComputed`函数的定义位于源码的`src/core/instance/state.js`中，如下：
 
 ```javascript
 function initComputed (vm: Component, computed: Object) {
@@ -1069,7 +1073,7 @@ if (typeof userDef === 'function') {
         ? createComputedGetter(key)
     : userDef
     sharedPropertyDefinition.set = noop
-} 
+}
 ```
 
 如果`userDef`不是一个函数，那么就将它当作对象处理。在设置`sharedPropertyDefinition.get`的时候先判断`userDef.get`是否存在，如果不存在，则将其设置为`noop`，如果存在，则同上面一样，在非服务端渲染环境下并且用户没有明确的将`userDef.cache`设置为`false`时调用`createComputedGetter`函数创建一个`getter`赋给`sharedPropertyDefinition.get`。然后设置`sharedPropertyDefinition.set`为`userDef.set`函数。如下：
@@ -1189,7 +1193,7 @@ export default class Watcher {
                     this.dep.notify()
                 })
             }
-        } 
+        }
     }
 
     getAndInvoke (cb: Function) {
@@ -1287,7 +1291,7 @@ vm.a = 2 // => new: 2, old: 1
 
 ### 7.2 initWatch函数分析
 
-了解了`watch`选项的用法之后，下面我们就来分析一下`watch`选项的初始化函数`initWatch`的内部原理是怎样的。`initWatch`函数的定义位于源码的`src/core/instance/state.js`中，如下： 
+了解了`watch`选项的用法之后，下面我们就来分析一下`watch`选项的初始化函数`initWatch`的内部原理是怎样的。`initWatch`函数的定义位于源码的`src/core/instance/state.js`中，如下：
 
 ```javascript
 function initWatch (vm, watch) {
