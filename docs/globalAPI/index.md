@@ -1,3 +1,7 @@
+---
+title: 全局API分析
+---
+
 ## 0. 前言
 
 与实例方法不同，实例方法是将方法挂载到`Vue`的原型上，而全局API是直接在`Vue`上挂载方法。在`Vue`中，全局API一共有12个，分别是`Vue.extend`、`Vue.nextTick`、`Vue.set`、`Vue.delete`、`Vue.directive`、`Vue.filter `、`Vue.component`、`Vue.use`、`Vue.mixin`、`Vue.observable`、`Vue.version`。这12个API中有的是我们在日常业务开发中经常会用到的，有的是对`Vue`内部或外部插件提供的，我们在日常业务开发中几乎用不到。接下来我们就对这12个API逐个进行分析，看看其内部原理都是怎样的。
@@ -291,7 +295,7 @@ Vue.nextTick( [callback, context] )
   Vue.nextTick(function () {
     // DOM 更新了
   })
-  
+
   // 作为一个 Promise 使用 (2.1.0 起新增，详见接下来的提示)
   Vue.nextTick()
     .then(function () {
@@ -354,7 +358,7 @@ Vue.delete( target, propertyName/index )
 
   > 在 2.2.0+ 中同样支持在数组上工作。
 
-  
+
 
 ### 4.2 原理分析
 
@@ -388,12 +392,12 @@ Vue.directive( id, [definition] )
     componentUpdated: function () {},
     unbind: function () {}
   })
-  
+
   // 注册 (指令函数)
   Vue.directive('my-directive', function () {
     // 这里将会被 `bind` 和 `update` 调用
   })
-  
+
   // getter，返回已注册的指令
   var myDirective = Vue.directive('my-directive')
   ```
@@ -478,7 +482,7 @@ Vue.filter( id, [definition] )
   Vue.filter('my-filter', function (value) {
     // 返回处理后的值
   })
-  
+
   // getter，返回已注册的过滤器
   var myFilter = Vue.filter('my-filter')
   ```
@@ -529,10 +533,10 @@ Vue.component( id, [definition] )
   ```javascript
   // 注册组件，传入一个扩展过的构造器
   Vue.component('my-component', Vue.extend({ /* ... */ }))
-  
+
   // 注册组件，传入一个选项对象 (自动调用 Vue.extend)
   Vue.component('my-component', { /* ... */ })
-  
+
   // 获取注册的组件 (始终返回构造器)
   var MyComponent = Vue.component('my-component')
   ```
@@ -768,7 +772,7 @@ Vue.compile( template )
 
   ```javascript
   var res = Vue.compile('<div><span>{{ msg }}</span></div>')
-  
+
   new Vue({
     data: {
       msg: 'hello'
@@ -811,7 +815,7 @@ Vue.observable( object )
 
   ```javascript
   const state = Vue.observable({ count: 0 })
-  
+
   const Demo = {
     render(h) {
       return h('button', {
@@ -842,7 +846,7 @@ Vue.version
 
   ```javascript
   var version = Number(Vue.version.split('.')[0])
-  
+
   if (version === 2) {
     // Vue v2.x.x
   } else if (version === 1) {

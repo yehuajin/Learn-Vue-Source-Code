@@ -1,3 +1,7 @@
+---
+title: 模板解析阶段(文本解析器)
+---
+
 ## 1. 前言
 
 在上篇文章中我们说了，当`HTML`解析器解析到文本内容时会调用4个钩子函数中的`chars`函数来创建文本型的`AST`节点，并且也说了在`chars`函数中会根据文本内容是否包含变量再细分为创建含有变量的`AST`节点和不包含变量的`AST`节点，如下：
@@ -16,7 +20,7 @@ chars (text) {
        let element = {
            type: 3,
            text
-       } 
+       }
     }
 }
 ```
@@ -149,14 +153,14 @@ const rawTokens = []
 let lastIndex = tagRE.lastIndex = 0
 let match, index, tokenValue
 while ((match = tagRE.exec(text))) {
-    
+
 }
 ```
 
 接下来会开启一个`while`循环，循环结束条件是`tagRE.exec(text)`的结果`match`是否为`null`，`exec( )`方法是在一个字符串中执行匹配检索，如果它没有找到任何匹配就返回`null`，但如果它找到了一个匹配就返回一个数组。例如：
 
 ```javascript
-tagRE.exec("hello {{name}}，I am {{age}}")  
+tagRE.exec("hello {{name}}，I am {{age}}")
 //返回：["{{name}}", "name", index: 6, input: "hello {{name}}，I am {{age}}", groups: undefined]
 tagRE.exec("hello")
 //返回：null
@@ -189,7 +193,7 @@ while ((match = tagRE.exec(text))) {
 
 ```javascript
 const tagRE = /\{\{((?:.|\n)+?)\}\}/g
-tagRE.exec("hello {{name}}，I am {{age}}")  
+tagRE.exec("hello {{name}}，I am {{age}}")
 tagRE.lastIndex   // 14
 ```
 

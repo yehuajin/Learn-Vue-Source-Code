@@ -1,3 +1,7 @@
+---
+title: 初始化阶段(initEvents)
+---
+
 ## 1. 前言
 
 本篇文章介绍生命周期初始化阶段所调用的第二个初始化函数——`initEvents`。从函数名字上来看，这个初始化函数是初始化实例的事件系统。我们知道，在`Vue`中，当我们在父组件中使用子组件时可以给子组件上注册一些事件，这些事件即包括使用`v-on`或`@`注册的自定义事件，也包括注册的浏览器原生事件（需要加 `.native` 修饰符），如下：
@@ -31,18 +35,18 @@ function processAttrs (el) {
       if (onRE.test(name)) { // v-on
         name = name.replace(onRE, '')
         addHandler(el, name, value, modifiers, false, warn)
-      } 
-    } 
+      }
+    }
   }
 }
 ```
 
-从上述代码中可以看到，在对标签属性进行解析时，判断如果属性是指令，首先通过 `parseModifiers` 解析出属性的修饰符，然后判断如果是事件的指令，则执行 `addHandler(el, name, value, modifiers, false, warn)` 方法，  该方法定义在 `src/compiler/helpers.js` 中，如下： 
+从上述代码中可以看到，在对标签属性进行解析时，判断如果属性是指令，首先通过 `parseModifiers` 解析出属性的修饰符，然后判断如果是事件的指令，则执行 `addHandler(el, name, value, modifiers, false, warn)` 方法，  该方法定义在 `src/compiler/helpers.js` 中，如下：
 
 ```javascript
 export function addHandler (el,name,value,modifiers) {
     modifiers = modifiers || emptyObject
-  
+
     // check capture modifier 判断是否有capture修饰符
     if (modifiers.capture) {
       delete modifiers.capture
@@ -58,8 +62,8 @@ export function addHandler (el,name,value,modifiers) {
       delete modifiers.passive
       name = '&' + name // 给事件名前加'&'用以标记passive修饰符
     }
-  
-  
+
+
     let events
     if (modifiers.native) {
       delete modifiers.native
@@ -67,14 +71,14 @@ export function addHandler (el,name,value,modifiers) {
     } else {
       events = el.events || (el.events = {})
     }
-    
+
     const newHandler: any = {
         value: value.trim()
       }
       if (modifiers !== emptyObject) {
         newHandler.modifiers = modifiers
       }
-    
+
       const handlers = events[name]
       if (Array.isArray(handlers)) {
         handlers.push(newHandler)
@@ -83,14 +87,14 @@ export function addHandler (el,name,value,modifiers) {
       } else {
         events[name] = newHandler
       }
-    
+
       el.plain = false
   }
 ```
 
-在`addHandler` 函数里做了 3 件事情，首先根据 `modifier` 修饰符对事件名 `name` 做处理，接着根据 `modifier.native` 判断事件是一个浏览器原生事件还是自定义事件，分别对应 `el.nativeEvents` 和 `el.events`，最后按照 `name` 对事件做归类，并把回调函数的字符串保留到对应的事件中。 
+在`addHandler` 函数里做了 3 件事情，首先根据 `modifier` 修饰符对事件名 `name` 做处理，接着根据 `modifier.native` 判断事件是一个浏览器原生事件还是自定义事件，分别对应 `el.nativeEvents` 和 `el.events`，最后按照 `name` 对事件做归类，并把回调函数的字符串保留到对应的事件中。
 
- 在前言中的例子中，父组件的 `child` 节点生成的 `el.events` 和 `el.nativeEvents` 如下： 
+ 在前言中的例子中，父组件的 `child` 节点生成的 `el.events` 和 `el.nativeEvents` 如下：
 
 ```javascript
 el.events = {
@@ -106,7 +110,7 @@ el.nativeEvents = {
 }
 ```
 
- 然后在模板编译的代码生成阶段，会在 `genData` 函数中根据 `AST` 元素节点上的 `events` 和 `nativeEvents` 生成`_c(tagName,data,children)`函数中所需要的 `data` 数据，它的定义在 `src/compiler/codegen/index.js` 中： 
+ 然后在模板编译的代码生成阶段，会在 `genData` 函数中根据 `AST` 元素节点上的 `events` 和 `nativeEvents` 生成`_c(tagName,data,children)`函数中所需要的 `data` 数据，它的定义在 `src/compiler/codegen/index.js` 中：
 
 ```javascript
 export function genData (el state) {
@@ -151,9 +155,9 @@ export function createComponent (
 ): VNode | Array<VNode> | void {
   // ...
   const listeners = data.on
-  
+
   data.on = data.nativeOn
-  
+
   // ...
   const name = Ctor.options.name || tag
   const vnode = new VNode(
@@ -169,7 +173,7 @@ export function createComponent (
 
 可以看到，把 自定义事件`data.on` 赋值给了 `listeners`，把浏览器原生事件 `data.nativeOn` 赋值给了 `data.on`，这说明所有的原生浏览器事件处理是在当前父组件环境中处理的。而对于自定义事件，会把 `listeners` 作为 `vnode` 的 `componentOptions` 传入，放在子组件初始化阶段中处理， 在子组件的初始化的时候，  拿到了父组件传入的 `listeners`，然后在执行 `initEvents` 的过程中，会处理这个 `listeners`。
 
-所以铺垫了这么多，结论来了：**父组件给子组件的注册事件中，把自定义事件传给子组件，在子组件实例化的时候进行初始化；而浏览器原生事件是在父组件中处理。** 
+所以铺垫了这么多，结论来了：**父组件给子组件的注册事件中，把自定义事件传给子组件，在子组件实例化的时候进行初始化；而浏览器原生事件是在父组件中处理。**
 
 换句话说：**实例初始化阶段调用的初始化事件函数`initEvents`实际上初始化的是父组件在模板中使用v-on或@注册的监听子组件内触发的事件。**
 
@@ -295,7 +299,7 @@ if (isUndef(old)) {
         cur = on[name] = createFnInvoker(cur)
     }
     add(event.name, cur, event.once, event.capture, event.passive, event.params)
-} 
+}
 ```
 
 这里定义了 `createFnInvoker` 方法并返回`invoker`函数:

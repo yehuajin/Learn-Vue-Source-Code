@@ -1,3 +1,7 @@
+---
+title: 生命周期相关的方法
+---
+
 ## 0. 前言
 
 与生命周期相关的实例方法有4个，分别是`vm.$mount`、`vm.$forceUpdate`、`vm.$nextTick`和`vm.$destory`。其中，`$forceUpdate`和`$destroy`方法是在`lifecycleMixin`函数中挂载到`Vue`原型上的，`$nextTick`方法是在`renderMixin`函数中挂载到`Vue`原型上的，而`$mount`方法是在跨平台的代码中挂载到`Vue`原型上的。代码如下：
@@ -149,7 +153,7 @@ OK，现在大家应该对`nextTick`是什么、为什么要有`nextTick`以及�
 for (macroTask of macroTaskQueue) {
     // 1. 处理当前的宏任务
     handleMacroTask();
-      
+
     // 2. 处理对应的所有微任务
     for (microTask of microTaskQueue) {
         handleMicroTask(microTask);
@@ -190,7 +194,7 @@ if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
     macroTimerFunc = () => {
         setImmediate(flushCallbacks)
     }
-} 
+}
 // 检测是否支持原生的 MessageChannel
 else if (typeof MessageChannel !== 'undefined' && (
     isNative(MessageChannel) ||
@@ -203,7 +207,7 @@ else if (typeof MessageChannel !== 'undefined' && (
     macroTimerFunc = () => {
         port.postMessage(1)
     }
-} 
+}
 // 都不支持的情况下，使用setTimeout
 else {
     macroTimerFunc = () => {
@@ -218,7 +222,7 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
     microTimerFunc = () => {
         p.then(flushCallbacks)
     }
-} 
+}
 // 不支持的话直接指向 macro task 的实现。
 else {
     // fallback to macro

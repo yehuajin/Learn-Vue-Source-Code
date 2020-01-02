@@ -1,3 +1,7 @@
+---
+title: Vue中的虚拟DOM
+---
+
 ## 1. 前言
 
 虚拟DOM，这个名词作为当下的前端开发人员你一定不会陌生，至少会略有耳闻，但不会闻所未闻吧。这也是现在求职面试考察中非常高频的一个考点了。因为在当下的前端三大框架中关于虚拟DOM或多或少都有所涉及，那么接下来，我们就从源码角度出发，看看`Vue`中的虚拟DOM时怎样的。
@@ -12,7 +16,7 @@
 
    ```javascript
    <div class="a" id="b">我是内容</div>
-   
+
    {
      tag:'div',        // 元素标签
      attrs:{           // 属性
@@ -81,8 +85,8 @@ export default class VNode {
     this.ns = undefined            /*当前节点的名字空间*/
     this.context = context          /*当前组件节点对应的Vue实例*/
     this.fnContext = undefined       /*函数式组件对应的Vue实例*/
-    this.fnOptions = undefined      
-    this.fnScopeId = undefined          
+    this.fnOptions = undefined
+    this.fnScopeId = undefined
     this.key = data && data.key           /*节点的key属性，被当作节点的标志，用以优化*/
     this.componentOptions = componentOptions   /*组件的option选项*/
     this.componentInstance = undefined       /*当前节点对应的组件的实例*/
@@ -148,7 +152,7 @@ export function createTextVNode (val: string | number) {
 
 #### 3.2.3 克隆节点
 
-克隆节点就是把一个已经存在的节点复制一份出来，它主要是为了做模板编译优化时使用，这个后面我们会说道。关于克隆节点的描述，源码如下：
+克隆节点就是把一个已经存在的节点复制一份出来，它主要是为了做模板编译优化时使用，这个后面我们会说到。关于克隆节点的描述，源码如下：
 
 ```javascript
 // 创建克隆节点

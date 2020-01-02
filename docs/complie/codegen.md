@@ -1,3 +1,7 @@
+---
+title: 代码生成阶段
+---
+
 ## 1. 前言
 
 经过前几篇文章，我们把用户所写的模板字符串先经过解析阶段解析生成对应的抽象语法树`AST`，接着再经过优化阶段将`AST`中的静态节点及静态根节点都打上标记，现在终于到了模板编译三大阶段的最后一个阶段了——代码生成阶段。所谓代码生成阶段，到底是要生成什么代码？答：要生成`render`函数字符串。
@@ -38,7 +42,7 @@ ast = {
       'type': 1,
       'tag': 'p',
       'plain': false,
-      'static':false,  
+      'static':false,
       'children': [
         {
             'type': 2,
@@ -95,7 +99,7 @@ ast = {
 
    ```javascript
    res.render = createFunction(compiled.render, fnGenErrors)
-   
+
    function createFunction (code, errors) {
      try {
        return new Function(code)
@@ -197,7 +201,7 @@ children ? `,${children}` : '' // children
      let data = '{'
      const dirs = genDirectives(el, state)
      if (dirs) data += dirs + ','
-   
+
        // key
        if (el.key) {
            data += `key:${el.key},`
@@ -213,7 +217,7 @@ children ? `,${children}` : '' // children
        if (el.pre) {
            data += `pre:true,`
        }
-       // 篇幅所限，省略其他情况的判断	
+       // 篇幅所限，省略其他情况的判断
        data = data.replace(/,$/, '') + '}'
        return data
    }

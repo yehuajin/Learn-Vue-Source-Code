@@ -1,3 +1,7 @@
+---
+title: 更新子节点
+---
+
 ## 1. 前言
 
 在上一篇文章中，我们了解了`Vue`中的`patch`过程，即`DOM-Diff`算法。并且知道了在`patch`过程中基本会干三件事，分别是：创建节点，删除节点和更新节点。创建节点和删除节点都比较简单，而更新节点因为要处理各种可能出现的情况所以逻辑略微复杂一些，但是没关系，我们通过分析过程，对照源码，画逻辑流程图来帮助我们理解了其中的过程。最后我们还遗留了一个问题，那就是在更新节点过程中，新旧`VNode`可能都包含有子节点，对于子节点的对比更新会有额外的一些逻辑，那么在本篇文章中我们就来学习在`Vue`中是怎么对比更新子节点的。
@@ -99,7 +103,7 @@ if (isUndef(idxInOld)) {    // 如果在oldChildren里找不到当前循环的ne
         oldCh[idxInOld] = undefined
         // canmove表示是否需要移动节点，如果为true表示需要移动，则移动节点，如果为false则不用移动
         canMove && nodeOps.insertBefore(parentElm, vnodeToMove.elm, oldStartVnode.elm)
-    } 
+    }
 }
 ```
 

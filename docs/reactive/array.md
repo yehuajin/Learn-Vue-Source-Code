@@ -1,3 +1,7 @@
+---
+title: Array的变化侦测
+---
+
 ## 1. 前言
 
 上一篇文章中我们介绍了`Object`数据的变化侦测方式，本篇文章我们来看一下对`Array`型数据的变化`Vue`是如何进行侦测的。
@@ -168,7 +172,7 @@ function copyAugment (target: Object, src: Object, keys: Array<string>) {
 export class Observer {
   constructor (value) {
     this.value = value
-    this.dep = new Dep()    // 实例化一个依赖管理器，用来收集数组依赖  
+    this.dep = new Dep()    // 实例化一个依赖管理器，用来收集数组依赖
     if (Array.isArray(value)) {
       const augment = hasProto
         ? protoAugment
@@ -372,7 +376,7 @@ arr.length = 0    // 通过修改数组长度清空数组
 ```
 
 而使用上述例子中的操作方式来修改数组是无法侦测到的。
-同样，`Vue`也注意到了这个问题， 为了解决这一问题，`Vue`增加了两个全局API:`Vue.set`和`Vue.delete`，这两个API的实现原理将会在后面学习全局API的时候说到。 
+同样，`Vue`也注意到了这个问题， 为了解决这一问题，`Vue`增加了两个全局API:`Vue.set`和`Vue.delete`，这两个API的实现原理将会在后面学习全局API的时候说到。
 ## 8. 总结
 
 在本篇文章中，首先我们分析了对于`Array`型数据也在`getter`中进行依赖收集；其次我们发现，当数组数据被访问时我们轻而易举可以知道，但是被修改时我们却很难知道，为了解决这一问题，我们创建了数组方法拦截器，从而成功的将数组数据变的可观测。接着我们对数组的依赖收集及数据变化如何通知依赖进行了深入分析；最后我们发现`Vue`不但对数组自身进行了变化侦测，还对数组中的每一个元素以及新增的元素都进行了变化侦测，我们也分析了其实现原理。

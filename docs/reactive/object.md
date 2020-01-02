@@ -1,3 +1,7 @@
+---
+title: Object的变化侦测
+---
+
 ## 1. 前言
 
 在上一篇文章中，我们知道：数据驱动视图的关键点则在于我们如何知道数据发生了变化，只要知道数据在什么时候变了，那么问题就变得迎刃而解，我们只需在数据变化的时候去通知视图更新即可。
@@ -49,7 +53,7 @@ let car = {
 为了把`car`的所有属性都变得可观测，我们可以编写如下代码：
 
 ```javascript
-// 源码位置：src/core/observer/index.js	
+// 源码位置：src/core/observer/index.js
 
 /**
  * Observer类会通过递归的方式把一个对象的所有属性都转化成可观测对象
@@ -58,11 +62,11 @@ export class Observer {
   constructor (value) {
     this.value = value
     // 给value新增一个__ob__属性，值为该value的Observer实例
-    // 相当于为value打上标记，表示它已经被转化成响应式了，避免重复操作  
-    def(value,'__ob__',this)    
+    // 相当于为value打上标记，表示它已经被转化成响应式了，避免重复操作
+    def(value,'__ob__',this)
     if (Array.isArray(value)) {
       // 当value为数组时的逻辑
-      // ...  
+      // ...
     } else {
       this.walk(value)
     }
@@ -151,12 +155,12 @@ let car = new Observer({
 在3.1小节中也说了，我们给每个数据都建一个依赖数组，谁依赖了这个数据我们就把谁放入这个依赖数组中。单单用一个数组来存放依赖的话，功能好像有点欠缺并且代码过于耦合。我们应该将依赖数组的功能扩展一下，更好的做法是我们应该为每一个数据都建立一个依赖管理器，把这个数据所有的依赖都管理起来。OK，到这里，我们的依赖管理器`Dep`类应运而生，代码如下：
 
 ```javascript
-// 源码位置：src/core/observer/dep.js	
+// 源码位置：src/core/observer/dep.js
 export default class Dep {
   constructor () {
     this.subs = []
   }
-  
+
   addSub (sub) {
     this.subs.push(sub)
   }
