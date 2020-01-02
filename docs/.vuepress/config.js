@@ -176,6 +176,7 @@ module.exports = {
     ]
   },
   plugins: [
+    ["@vuepress/back-to-top", true],
     [
       "vuepress-plugin-medium-zoom",
       {

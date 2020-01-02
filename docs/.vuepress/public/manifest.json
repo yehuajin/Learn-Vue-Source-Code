@@ -1,6 +1,6 @@
 {
-  "name": "LearnVueSourceCode",
-  "short_name": "LearnVueSourceCode",
+  "name": "逐行剖析Vue.js源码",
+  "short_name": "逐行剖析Vue.js源码",
   "icons": [
     {
       "src": "/icons/android-chrome-192x192.png",
@@ -13,7 +13,7 @@
       "type": "image/png"
     }
   ],
-  "start_url": "/Learn-Vue-Source-Code/",
+  "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#fff",
   "theme_color": "#3eaf7c"
