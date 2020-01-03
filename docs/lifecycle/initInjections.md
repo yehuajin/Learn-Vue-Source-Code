@@ -156,8 +156,8 @@ export function initInjections (vm: Component) {
   if (result) {
     toggleObserving(false)
     Object.keys(result).forEach(key => {
-        defineReactive(vm, key, result[key])
-      }
+      defineReactive(vm, key, result[key])
+    }
     toggleObserving(true)
   }
 }
@@ -273,30 +273,31 @@ const Child = {
 
 ```javascript
 for (let i = 0; i < keys.length; i++) {
-    const key = keys[i]
-    const provideKey = inject[key].from
-    let source = vm
-    while (source) {
-        if (source._provided && hasOwn(source._provided, provideKey)) {
-            result[key] = source._provided[provideKey]
-            break
-        }
-        source = source.$parent
+  const key = keys[i]
+  const provideKey = inject[key].from
+  let source = vm
+  while (source) {
+    if (source._provided && hasOwn(source._provided, provideKey)) {
+      result[key] = source._provided[provideKey]
+      break
     }
+    source = source.$parent
+  }
+}
 ```
 
 如果没有找到，那么就看`inject` 选项中当前的数据`key`是否设置了默认值，即是否有`default`属性，如果有的话，则拿到这个默认值，官方文档示例中说了，默认值可以为一个工厂函数，所以当默认值是函数的时候，就去该函数的返回值，否则就取默认值本身。如果没有设置默认值，则抛出异常。如下：
 
 ```javascript
 if (!source) {
-    if ('default' in inject[key]) {
-        const provideDefault = inject[key].default
-        result[key] = typeof provideDefault === 'function'
-            ? provideDefault.call(vm)
-        : provideDefault
-    } else if (process.env.NODE_ENV !== 'production') {
-        warn(`Injection "${key}" not found`, vm)
-    }
+  if ('default' in inject[key]) {
+    const provideDefault = inject[key].default
+    result[key] = typeof provideDefault === 'function'
+        ? provideDefault.call(vm)
+    : provideDefault
+  } else if (process.env.NODE_ENV !== 'production') {
+    warn(`Injection "${key}" not found`, vm)
+  }
 }
 ```
 
@@ -374,9 +375,9 @@ function normalizeInject (options: Object, vm: ?Component) {
 
 ```javascript
 inject:{
-    foo:{
-        from:'foo'
-    }
+  foo:{
+    from:'foo'
+  }
 }
 ```
 
@@ -384,10 +385,10 @@ inject:{
 
 ```javascript
 inject:{
-    foo:{
-        from: 'foo',
-      	default: 'xxx'
-    }
+  foo:{
+    from: 'foo',
+    default: 'xxx'
+  }
 }
 ```
 
@@ -395,9 +396,9 @@ inject:{
 
 ```javascript
 inject:{
-    foo:{
-        from: 'foo'
-    }
+  foo:{
+    from: 'foo'
+  }
 }
 ```
 

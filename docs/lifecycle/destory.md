@@ -17,46 +17,45 @@ title: 销毁阶段
 
 ```javascript
 Vue.prototype.$destroy = function () {
-    const vm: Component = this
-    if (vm._isBeingDestroyed) {
-      return
-    }
-    callHook(vm, 'beforeDestroy')
-    vm._isBeingDestroyed = true
-    // remove self from parent
-    const parent = vm.$parent
-    if (parent && !parent._isBeingDestroyed && !vm.$options.abstract) {
-      remove(parent.$children, vm)
-    }
-    // teardown watchers
-    if (vm._watcher) {
-      vm._watcher.teardown()
-    }
-    let i = vm._watchers.length
-    while (i--) {
-      vm._watchers[i].teardown()
-    }
-    // remove reference from data ob
-    // frozen object may not have observer.
-    if (vm._data.__ob__) {
-      vm._data.__ob__.vmCount--
-    }
-    // call the last hook...
-    vm._isDestroyed = true
-    // invoke destroy hooks on current rendered tree
-    vm.__patch__(vm._vnode, null)
-    // fire destroyed hook
-    callHook(vm, 'destroyed')
-    // turn off all instance listeners.
-    vm.$off()
-    // remove __vue__ reference
-    if (vm.$el) {
-      vm.$el.__vue__ = null
-    }
-    // release circular reference (##6759)
-    if (vm.$vnode) {
-      vm.$vnode.parent = null
-    }
+  const vm: Component = this
+  if (vm._isBeingDestroyed) {
+    return
+  }
+  callHook(vm, 'beforeDestroy')
+  vm._isBeingDestroyed = true
+  // remove self from parent
+  const parent = vm.$parent
+  if (parent && !parent._isBeingDestroyed && !vm.$options.abstract) {
+    remove(parent.$children, vm)
+  }
+  // teardown watchers
+  if (vm._watcher) {
+    vm._watcher.teardown()
+  }
+  let i = vm._watchers.length
+  while (i--) {
+    vm._watchers[i].teardown()
+  }
+  // remove reference from data ob
+  // frozen object may not have observer.
+  if (vm._data.__ob__) {
+    vm._data.__ob__.vmCount--
+  }
+  // call the last hook...
+  vm._isDestroyed = true
+  // invoke destroy hooks on current rendered tree
+  vm.__patch__(vm._vnode, null)
+  // fire destroyed hook
+  callHook(vm, 'destroyed')
+  // turn off all instance listeners.
+  vm.$off()
+  // remove __vue__ reference
+  if (vm.$el) {
+    vm.$el.__vue__ = null
+  }
+  // release circular reference (##6759)
+  if (vm.$vnode) {
+    vm.$vnode.parent = null
   }
 }
 ```
@@ -66,7 +65,7 @@ Vue.prototype.$destroy = function () {
 ```javascript
 const vm: Component = this
 if (vm._isBeingDestroyed) {
-    return
+  return
 }
 ```
 
@@ -83,7 +82,7 @@ callHook(vm, 'beforeDestroy')
 ```javascript
 const parent = vm.$parent
 if (parent && !parent._isBeingDestroyed && !vm.$options.abstract) {
-    remove(parent.$children, vm)
+  remove(parent.$children, vm)
 }
 ```
 
@@ -96,11 +95,11 @@ if (parent && !parent._isBeingDestroyed && !vm.$options.abstract) {
 ```javascript
 // teardown watchers
 if (vm._watcher) {
-    vm._watcher.teardown()
+  vm._watcher.teardown()
 }
 let i = vm._watchers.length
 while (i--) {
-    vm._watchers[i].teardown()
+  vm._watchers[i].teardown()
 }
 ```
 
@@ -110,7 +109,7 @@ while (i--) {
 
 ```javascript
 if (vm._data.__ob__) {
-    vm._data.__ob__.vmCount--
+  vm._data.__ob__.vmCount--
 }
 vm._isDestroyed = true
 vm.__patch__(vm._vnode, null)

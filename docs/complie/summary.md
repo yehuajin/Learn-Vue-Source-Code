@@ -18,25 +18,25 @@ title: 模板编译篇总结
 
 ```javascript
 Vue.prototype.$mount = function (el){
-    const options = this.$options
-    // 如果用户没有手写render函数
-    if (!options.render) {
-        // 获取模板，先尝试获取内部模板，如果获取不到则获取外部模板
-        let template = options.template
-        if (template) {
+  const options = this.$options
+  // 如果用户没有手写render函数
+  if (!options.render) {
+    // 获取模板，先尝试获取内部模板，如果获取不到则获取外部模板
+    let template = options.template
+    if (template) {
 
-        } else {
-             template = getOuterHTML(el)
-        }
-        const { render, staticRenderFns } = compileToFunctions(template, {
-            shouldDecodeNewlines,
-            shouldDecodeNewlinesForHref,
-            delimiters: options.delimiters,
-            comments: options.comments
-          }, this)
-        options.render = render
-        options.staticRenderFns = staticRenderFns
+    } else {
+      template = getOuterHTML(el)
     }
+    const { render, staticRenderFns } = compileToFunctions(template, {
+      shouldDecodeNewlines,
+      shouldDecodeNewlinesForHref,
+      delimiters: options.delimiters,
+      comments: options.comments
+    }, this)
+    options.render = render
+    options.staticRenderFns = staticRenderFns
+  }
 }
 ```
 
@@ -92,9 +92,9 @@ export const createCompiler = createCompilerCreator(function baseCompile (
 
 ```javascript
 export function createCompilerCreator (baseCompile) {
-    return function createCompiler (baseOptions) {
+  return function createCompiler (baseOptions) {
 
-    }
+  }
 }
 ```
 
@@ -102,13 +102,13 @@ export function createCompilerCreator (baseCompile) {
 
 ```javascript
 function createCompiler (baseOptions) {
-    function compile (){
+  function compile (){
 
-    }
-    return {
-      compile,
-      compileToFunctions: createCompileToFunctionFn(compile)
-    }
+  }
+  return {
+    compile,
+    compileToFunctions: createCompileToFunctionFn(compile)
+  }
 }
 ```
 
@@ -118,11 +118,16 @@ function createCompiler (baseOptions) {
 
 ```javascript
 export function createCompileToFunctionFn (compile) {
-     return function compileToFunctions (){
-         // compile
-    	const compiled = compile(template, options)
-        res.render = createFunction(compiled.render, fnGenErrors)
-     }
+  return function compileToFunctions (){
+    // compile
+    const res = {}
+    const compiled = compile(template, options)
+    res.render = createFunction(compiled.render, fnGenErrors)
+    res.staticRenderFns = compiled.staticRenderFns.map(code => {
+      return createFunction(code, fnGenErrors)
+    })
+    return res
+  }
 }
 
 function createFunction (code, errors) {
@@ -141,10 +146,10 @@ function createFunction (code, errors) {
 
 ```javascript
 function compile (template,options) {
-    const compiled = baseCompile(template, finalOptions)
-    compiled.errors = errors
-    compiled.tips = tips
-    return compiled
+  const compiled = baseCompile(template, finalOptions)
+  compiled.errors = errors
+  compiled.tips = tips
+  return compiled
 }
 ```
 
