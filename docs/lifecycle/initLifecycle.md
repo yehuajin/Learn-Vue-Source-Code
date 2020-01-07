@@ -45,10 +45,10 @@ export function initLifecycle (vm: Component) {
 ```javascript
 let parent = options.parent
 if (parent && !options.abstract) {
-    while (parent.$options.abstract && parent.$parent) {
-        parent = parent.$parent
-    }
-    parent.$children.push(vm)
+  while (parent.$options.abstract && parent.$parent) {
+    parent = parent.$parent
+  }
+  parent.$children.push(vm)
 }
 
 vm.$parent = parent
@@ -82,4 +82,4 @@ vm._isBeingDestroyed = false
 
 ## 3. 总结
 
-  本篇文章介绍了初始化阶段调用的第一个初始化函数——`initLifecycle`函数。该函数的逻辑非常简单，就是给实例初始化了一些属性，包括以`$`开头的供用户使用的外部属性，也包括以`_`开头的供内部使用的内部属性。
+本篇文章介绍了初始化阶段调用的第一个初始化函数——`initLifecycle`函数。该函数的逻辑非常简单，就是给实例初始化了一些属性，包括以`$`开头的供用户使用的外部属性，也包括以`_`开头的供内部使用的内部属性。

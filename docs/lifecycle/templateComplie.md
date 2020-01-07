@@ -35,9 +35,9 @@ title: 模板编译阶段
   ```javascript
   // 不需要编译器
   new Vue({
-      render (h) {
-          return h('div', this.hi)
-      }
+    render (h) {
+      return h('div', this.hi)
+    }
   })
   ```
 
@@ -69,9 +69,9 @@ Vue.prototype.$mount = function (el,hydrating) {
 ```javascript
 var mount = Vue.prototype.$mount;
 Vue.prototype.$mount = function (el,hydrating) {
-    // 省略获取模板及编译代码
+  // 省略获取模板及编译代码
 
-    return mount.call(this, el, hydrating)
+  return mount.call(this, el, hydrating)
 }
 ```
 
@@ -92,64 +92,65 @@ Vue.prototype.$mount = function (el,hydrating) {
 ```javascript
 var mount = Vue.prototype.$mount;
 Vue.prototype.$mount = function (el,hydrating) {
-    el = el && query(el);
-    if (el === document.body || el === document.documentElement) {
-        "development" !== 'production' && warn(
-            "Do not mount Vue to <html> or <body> - mount to normal elements instead."
-        );
+  el = el && query(el);
+  if (el === document.body || el === document.documentElement) {
+    warn(
+      "Do not mount Vue to <html> or <body> - mount to normal elements instead."
+    );
+    return this
+  }
+
+  var options = this.$options;
+  // resolve template/el and convert to render function
+  if (!options.render) {
+    var template = options.template;
+    if (template) {
+      if (typeof template === 'string') {
+          if (template.charAt(0) === '#') {
+            template = idToTemplate(template);
+            /* istanbul ignore if */
+            if (!template) {
+              warn(
+                ("Template element not found or is empty: " + (options.template)),
+                this
+              );
+            }
+          }
+      } else if (template.nodeType) {
+        template = template.innerHTML;
+      } else {
+        {
+          warn('invalid template option:' + template, this);
+        }
         return this
+      }
+    } else if (el) {
+      template = getOuterHTML(el);
     }
+    if (template) {
+      if (config.performance && mark) {
+        mark('compile');
+      }
 
-    var options = this.$options;
-    // resolve template/el and convert to render function
-    if (!options.render) {
-        var template = options.template;
-        if (template) {
-            if (typeof template === 'string') {
-                if (template.charAt(0) === '##') {
-                    template = idToTemplate(template);
-                    /* istanbul ignore if */
-                    if ("development" !== 'production' && !template) {
-                        warn(
-                            ("Template element not found or is empty: " + (options.template)),
-                            this
-                        );
-                    }
-                }
-            } else if (template.nodeType) {
-                template = template.innerHTML;
-            } else {
-                {
-                    warn('invalid template option:' + template, this);
-                }
-                return this
-            }
-        } else if (el) {
-            template = getOuterHTML(el);
-        }
-        if (template) {
-            if ("development" !== 'production' && config.performance && mark) {
-                mark('compile');
-            }
+      var ref = compileToFunctions(template, {
+        outputSourceRange: "development" !== 'production',
+        shouldDecodeNewlines: shouldDecodeNewlines,
+        shouldDecodeNewlinesForHref: shouldDecodeNewlinesForHref,
+        delimiters: options.delimiters,
+        comments: options.comments
+      }, this);
+      var render = ref.render;
+      var staticRenderFns = ref.staticRenderFns;
+      options.render = render;
+      options.staticRenderFns = staticRenderFns;
 
-            var ref = compileToFunctions(template, {
-                shouldDecodeNewlines: shouldDecodeNewlines,
-                shouldDecodeNewlinesForHref: shouldDecodeNewlinesForHref,
-                delimiters: options.delimiters,
-                comments: options.comments
-            }, this);
-            var render = ref.render;
-            var staticRenderFns = ref.staticRenderFns;
-            options.render = render;
-            options.staticRenderFns = staticRenderFns;
-
-            if ("development" !== 'production' && config.performance && mark) {
-                mark('compile end');
-                measure(("vue " + (this._name) + " compile"), 'compile', 'compile end');
-            }
-        }
+      if (config.performance && mark) {
+        mark('compile end');
+        measure(("vue " + (this._name) + " compile"), 'compile', 'compile end');
+      }
     }
-    return mount.call(this, el, hydrating)
+  }
+  return mount.call(this, el, hydrating)
 };
 ```
 
@@ -167,18 +168,18 @@ Vue.prototype.$mount = function (el,hydrating) {
 el = el && query(el);
 
 function query (el) {
-    if (typeof el === 'string') {
-        var selected = document.querySelector(el);
-        if (!selected) {
-            "development" !== 'production' && warn(
-                'Cannot find element: ' + el
-            );
-            return document.createElement('div')
-        }
-        return selected
-    } else {
-        return el
+  if (typeof el === 'string') {
+    var selected = document.querySelector(el);
+    if (!selected) {
+      warn(
+        'Cannot find element: ' + el
+      );
+      return document.createElement('div')
     }
+    return selected
+  } else {
+    return el
+  }
 }
 ```
 
@@ -188,10 +189,10 @@ function query (el) {
 
 ```javascript
 if (el === document.body || el === document.documentElement) {
-    "development" !== 'production' && warn(
-        "Do not mount Vue to <html> or <body> - mount to normal elements instead."
-    );
-    return this
+  warn(
+    "Do not mount Vue to <html> or <body> - mount to normal elements instead."
+  );
+  return this
 }
 ```
 
@@ -201,30 +202,30 @@ if (el === document.body || el === document.documentElement) {
 
 ```javascript
 if (!options.render) {
-    var template = options.template;
-    if (template) {
-        if (typeof template === 'string') {
-            if (template.charAt(0) === '##') {
-                template = idToTemplate(template);
-                /* istanbul ignore if */
-                if ("development" !== 'production' && !template) {
-                    warn(
-                        ("Template element not found or is empty: " + (options.template)),
-                        this
-                    );
-                }
-            }
-        } else if (template.nodeType) {
-            template = template.innerHTML;
-        } else {
-            {
-                warn('invalid template option:' + template, this);
-            }
-            return this
+  var template = options.template;
+  if (template) {
+    if (typeof template === 'string') {
+      if (template.charAt(0) === '#') {
+        template = idToTemplate(template);
+        /* istanbul ignore if */
+        if (!template) {
+          warn(
+            ("Template element not found or is empty: " + (options.template)),
+            this
+          );
         }
-    } else if (el) {
-        template = getOuterHTML(el);
+      }
+    } else if (template.nodeType) {
+        template = template.innerHTML;
+    } else {
+      {
+        warn('invalid template option:' + template, this);
+      }
+      return this
     }
+  } else if (el) {
+    template = getOuterHTML(el);
+  }
 }
 ```
 
@@ -232,16 +233,16 @@ if (!options.render) {
 
 ```javascript
 if (template) {
-    if (typeof template === 'string') {
-        if (template.charAt(0) === '##') {
-            template = idToTemplate(template);
-        }
+  if (typeof template === 'string') {
+    if (template.charAt(0) === '#') {
+      template = idToTemplate(template);
     }
+  }
 }
 
 var idToTemplate = cached(function (id) {
-    var el = query(id);
-    return el && el.innerHTML
+  var el = query(id);
+  return el && el.innerHTML
 });
 ```
 
@@ -249,7 +250,7 @@ var idToTemplate = cached(function (id) {
 
 ```javascript
 if (template.nodeType) {
-    template = template.innerHTML;
+  template = template.innerHTML;
 }
 ```
 
@@ -257,10 +258,10 @@ if (template.nodeType) {
 
 ```javascript
 else {
-    {
-        warn('invalid template option:' + template, this);
-    }
-    return this
+  {
+    warn('invalid template option:' + template, this);
+  }
+  return this
 }
 ```
 
@@ -268,17 +269,17 @@ else {
 
 ```javascript
 if (el) {
-    template = getOuterHTML(el);
+  template = getOuterHTML(el);
 }
 
 function getOuterHTML (el) {
-    if (el.outerHTML) {
-        return el.outerHTML
-    } else {
-        var container = document.createElement('div');
-        container.appendChild(el.cloneNode(true));
-        return container.innerHTML
-    }
+  if (el.outerHTML) {
+    return el.outerHTML
+  } else {
+    var container = document.createElement('div');
+    container.appendChild(el.cloneNode(true));
+    return container.innerHTML
+  }
 }
 ```
 
@@ -288,16 +289,17 @@ function getOuterHTML (el) {
 
 ```javascript
 if (template) {
-    var ref = compileToFunctions(template, {
-        shouldDecodeNewlines: shouldDecodeNewlines,
-        shouldDecodeNewlinesForHref: shouldDecodeNewlinesForHref,
-        delimiters: options.delimiters,
-        comments: options.comments
-    }, this);
-    var render = ref.render;
-    var staticRenderFns = ref.staticRenderFns;
-    options.render = render;
-    options.staticRenderFns = staticRenderFns;
+  var ref = compileToFunctions(template, {
+    outputSourceRange: "development" !== 'production',
+    shouldDecodeNewlines: shouldDecodeNewlines,
+    shouldDecodeNewlinesForHref: shouldDecodeNewlinesForHref,
+    delimiters: options.delimiters,
+    comments: options.comments
+  }, this);
+  var render = ref.render;
+  var staticRenderFns = ref.staticRenderFns;
+  options.render = render;
+  options.staticRenderFns = staticRenderFns;
 }
 ```
 

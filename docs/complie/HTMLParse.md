@@ -89,18 +89,18 @@ export function parse(template, options) {
   // 当解析到标签的文本时，触发chars
   chars (text) {
   	if(text是带变量的动态文本){
-         let element = {
-             type: 2,
-             expression: res.expression,
-             tokens: res.tokens,
-             text
-         }
-      } else {
-         let element = {
-             type: 3,
-             text
-         }
+      let element = {
+        type: 2,
+        expression: res.expression,
+        tokens: res.tokens,
+        text
       }
+    } else {
+      let element = {
+        type: 3,
+        text
+      }
+    }
   }
   ```
 
@@ -111,11 +111,11 @@ export function parse(template, options) {
   ```javascript
   // 当解析到标签的注释时，触发comment
   comment (text: string) {
-      let element = {
-          type: 3,
-          text,
-          isComment: true
-      }
+    let element = {
+      type: 3,
+      text,
+      isComment: true
+    }
   }
   ```
 
@@ -145,19 +145,19 @@ export function parse(template, options) {
 ```javascript
 const comment = /^<!\--/
 if (comment.test(html)) {
-    // 若为注释，则继续查找是否存在'-->'
-    const commentEnd = html.indexOf('-->')
+  // 若为注释，则继续查找是否存在'-->'
+  const commentEnd = html.indexOf('-->')
 
-    if (commentEnd >= 0) {
-        // 若存在 '-->',继续判断options中是否保留注释
-        if (options.shouldKeepComment) {
-            // 若保留注释，则把注释截取出来传给options.comment，创建注释类型的AST节点
-            options.comment(html.substring(4, commentEnd))
-        }
-        // 若不保留注释，则将游标移动到'-->'之后，继续向后解析
-        advance(commentEnd + 3)
-        continue
+  if (commentEnd >= 0) {
+    // 若存在 '-->',继续判断options中是否保留注释
+    if (options.shouldKeepComment) {
+      // 若保留注释，则把注释截取出来传给options.comment，创建注释类型的AST节点
+      options.comment(html.substring(4, commentEnd))
     }
+    // 若不保留注释，则将游标移动到'-->'之后，继续向后解析
+    advance(commentEnd + 3)
+    continue
+  }
 }
 ```
 
@@ -169,8 +169,8 @@ if (comment.test(html)) {
 
 ```javascript
 function advance (n) {
-    index += n   // index为解析游标
-    html = html.substring(n)
+  index += n   // index为解析游标
+  html = html.substring(n)
 }
 ```
 为了更加直观地说明 `advance` 的作用，请看下图：
@@ -183,6 +183,7 @@ advance(3)
 ```
 
 得到结果：
+
 ![](~@/complie/6.png)
 
 从图中可以看到，解析游标`index`最开始在模板字符串的位置0处，当调用了`advance(3)`之后，解析游标到了位置3处，每次解析完一段内容就将游标向后移动一段，接着再从解析游标往后解析，这样就保证了解析过的内容不会被重复解析。
@@ -195,14 +196,15 @@ advance(3)
 // 解析是否是条件注释
 const conditionalComment = /^<!\[/
 if (conditionalComment.test(html)) {
-    // 若为条件注释，则继续查找是否存在']>'
-    const conditionalEnd = html.indexOf(']>')
+  // 若为条件注释，则继续查找是否存在']>'
+  const conditionalEnd = html.indexOf(']>')
 
-    if (conditionalEnd >= 0) {
-        // 若存在 ']>',则从原本的html字符串中把条件注释截掉，把剩下的内容重新赋给html，继续向后匹配
-        advance(conditionalEnd + 2)
-        continue
-    }
+  if (conditionalEnd >= 0) {
+    // 若存在 ']>',则从原本的html字符串中把条件注释截掉，
+    // 把剩下的内容重新赋给html，继续向后匹配
+    advance(conditionalEnd + 2)
+    continue
+  }
 }
 ```
 
@@ -215,8 +217,8 @@ const doctype = /^<!DOCTYPE [^>]+>/i
 // 解析是否是DOCTYPE
 const doctypeMatch = html.match(doctype)
 if (doctypeMatch) {
-    advance(doctypeMatch[0].length)
-    continue
+  advance(doctypeMatch[0].length)
+  continue
 }
 ```
 
@@ -236,11 +238,11 @@ const startTagOpen = new RegExp(`^<${qnameCapture}`)
 
 const start = html.match(startTagOpen)
 if (start) {
-    const match = {
-        tagName: start[1],
-        attrs: [],
-        start: index
-    }
+  const match = {
+    tagName: start[1],
+    attrs: [],
+    start: index
+  }
 }
 
 // 以开始标签开始的模板：
@@ -285,13 +287,13 @@ if (start) {
    const attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/
    const startTagClose = /^\s*(\/?)>/
    const match = {
-       tagName: start[1],
-       attrs: [],
-       start: index
+    tagName: start[1],
+    attrs: [],
+    start: index
    }
    while (!(end = html.match(startTagClose)) && (attr = html.match(attribute))) {
-       advance(attr[0].length)
-       match.attrs.push(attr)
+    advance(attr[0].length)
+    match.attrs.push(attr)
    }
    ```
 
@@ -334,10 +336,10 @@ if (start) {
    const startTagClose = /^\s*(\/?)>/
    let end = html.match(startTagClose)
    if (end) {
-       match.unarySlash = end[1]
-       advance(end[0].length)
-       match.end = index
-       return match
+    match.unarySlash = end[1]
+    advance(end[0].length)
+    match.end = index
+    return match
    }
    ```
 
@@ -351,44 +353,44 @@ const startTagClose = /^\s*(\/?)>/
 
 
 function parseStartTag () {
-    const start = html.match(startTagOpen)
-    // '<div></div>'.match(startTagOpen)  => ['<div','div',index:0,input:'<div></div>']
-    if (start) {
-      const match = {
-        tagName: start[1],
-        attrs: [],
-        start: index
-      }
-      advance(start[0].length)
-      let end, attr
-      /**
-       * <div a=1 b=2 c=3></div>
-       * 从<div之后到开始标签的结束符号'>'之前，一直匹配属性attrs
-       * 所有属性匹配完之后，html字符串还剩下
-       * 自闭合标签剩下：'/>'
-       * 非自闭合标签剩下：'></div>'
-       */
-      while (!(end = html.match(startTagClose)) && (attr = html.match(attribute))) {
-        advance(attr[0].length)
-        match.attrs.push(attr)
-      }
+  const start = html.match(startTagOpen)
+  // '<div></div>'.match(startTagOpen)  => ['<div','div',index:0,input:'<div></div>']
+  if (start) {
+    const match = {
+      tagName: start[1],
+      attrs: [],
+      start: index
+    }
+    advance(start[0].length)
+    let end, attr
+    /**
+     * <div a=1 b=2 c=3></div>
+     * 从<div之后到开始标签的结束符号'>'之前，一直匹配属性attrs
+     * 所有属性匹配完之后，html字符串还剩下
+     * 自闭合标签剩下：'/>'
+     * 非自闭合标签剩下：'></div>'
+     */
+    while (!(end = html.match(startTagClose)) && (attr = html.match(attribute))) {
+      advance(attr[0].length)
+      match.attrs.push(attr)
+    }
 
-      /**
-       * 这里判断了该标签是否为自闭合标签
-       * 自闭合标签如:<input type='text' />
-       * 非自闭合标签如:<div></div>
-       * '></div>'.match(startTagClose) => [">", "", index: 0, input: "></div>", groups: undefined]
-       * '/><div></div>'.match(startTagClose) => ["/>", "/", index: 0, input: "/><div></div>", groups: undefined]
-       * 因此，我们可以通过end[1]是否是"/"来判断该标签是否是自闭合标签
-       */
-      if (end) {
-        match.unarySlash = end[1]
-        advance(end[0].length)
-        match.end = index
-        return match
-      }
+    /**
+     * 这里判断了该标签是否为自闭合标签
+     * 自闭合标签如:<input type='text' />
+     * 非自闭合标签如:<div></div>
+     * '></div>'.match(startTagClose) => [">", "", index: 0, input: "></div>", groups: undefined]
+     * '/><div></div>'.match(startTagClose) => ["/>", "/", index: 0, input: "/><div></div>", groups: undefined]
+     * 因此，我们可以通过end[1]是否是"/"来判断该标签是否是自闭合标签
+     */
+    if (end) {
+      match.unarySlash = end[1]
+      advance(end[0].length)
+      match.end = index
+      return match
     }
   }
+}
 ```
 
 通过源码可以看到，调用`parseStartTag`函数，如果模板字符串符合开始标签的特征，则解析开始标签，并将解析结果返回，如果不符合开始标签的特征，则返回`undefined`。

@@ -24,9 +24,9 @@ title: Array的变化侦测
 
 ```javascript
 data(){
-    return {
-        arr:[1,2,3]
-    }
+  return {
+    arr:[1,2,3]
+  }
 }
 ```
 
@@ -50,8 +50,8 @@ data(){
 let arr = [1,2,3]
 arr.push(4)
 Array.prototype.newPush = function(val){
-    console.log('arr被修改了')
-    this.push(val)
+  console.log('arr被修改了')
+  this.push(val)
 }
 arr.newPush(4)
 ```
@@ -94,13 +94,13 @@ const methodsToPatch = [
 methodsToPatch.forEach(function (method) {
   const original = arrayProto[method]      // 缓存原生方法
   Object.defineProperty(arrayMethods, method, {
-      enumerable: false,
-      configurable: true,
-      writable: true,
-      value:function mutator(...args){
-          const result = original.apply(this, args)
-          return result
-      }
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value:function mutator(...args){
+      const result = original.apply(this, args)
+      return result
+    }
   })
 })
 
@@ -193,24 +193,24 @@ export class Observer {
 
 ```javascript
 function defineReactive (obj,key,val) {
-    let childOb = observe(val)
-    Object.defineProperty(obj, key, {
-        enumerable: true,
-        configurable: true,
-        get(){
-            if (childOb) {
-              childOb.dep.depend()
-            }
-            return val;
-        },
-        set(newVal){
-            if(val === newVal){
-                return
-            }
-            val = newVal;
-            dep.notify()   // 在setter中通知依赖更新
-        }
-    })
+  let childOb = observe(val)
+  Object.defineProperty(obj, key, {
+    enumerable: true,
+    configurable: true,
+    get(){
+      if (childOb) {
+        childOb.dep.depend()
+      }
+      return val;
+    },
+    set(newVal){
+      if(val === newVal){
+        return
+      }
+      val = newVal;
+      dep.notify()   // 在setter中通知依赖更新
+    }
+  })
 }
 
 /**
@@ -270,10 +270,10 @@ OK，以上就基本完成了`Array`数据的变化侦测。
 
 ```javascript
 let arr = [
-    {
-        name:'NLRX'，
-        age:'18'
-    }
+  {
+    name:'NLRX'，
+    age:'18'
+  }
 ]
 ```
 

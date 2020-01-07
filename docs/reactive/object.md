@@ -18,9 +18,9 @@ title: Object的变化侦测
 
 ```javascript
 let car = {
-		'brand':'BMW',
-		'price':3000
-	}
+  'brand':'BMW',
+  'price':3000
+}
 ```
 
 我们定义了这个`car`的品牌`brand`是`BMW`,价格`price`是3000。现在我们可以通过`car.brand`和`car.price`直接读写这个`car`对应的属性值。但是，当这个`car`的属性被读取或修改时，我们并不知情。那么应该如何做才能够让`car`主动告诉我们，它的属性被修改了呢？
@@ -28,20 +28,20 @@ let car = {
 接下来，我们使用`Object.defineProperty() `改写上面的例子：
 
 ```javascript
-	let car = {}
-	let val = 3000
-	Object.defineProperty(car, 'price', {
-        enumerable: true,
-    	configurable: true,
-		get(){
-			console.log('price属性被读取了')
-			return val
-		},
-		set(newVal){
-			console.log('price属性被修改了')
-			val = newVal
-		}
-	})
+let car = {}
+let val = 3000
+Object.defineProperty(car, 'price', {
+  enumerable: true,
+  configurable: true,
+  get(){
+    console.log('price属性被读取了')
+    return val
+  },
+  set(newVal){
+    console.log('price属性被修改了')
+    val = newVal
+  }
+})
 ```
 
 通过`Object.defineProperty() `方法给`car`定义了一个`price`属性，并把这个属性的读和写分别使用`get()`和`set()`进行拦截，每当该属性进行读或写操作的时候就会触发`get()`和`set()`。如下图：

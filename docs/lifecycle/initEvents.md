@@ -45,51 +45,50 @@ function processAttrs (el) {
 
 ```javascript
 export function addHandler (el,name,value,modifiers) {
-    modifiers = modifiers || emptyObject
+  modifiers = modifiers || emptyObject
 
-    // check capture modifier 判断是否有capture修饰符
-    if (modifiers.capture) {
-      delete modifiers.capture
-      name = '!' + name // 给事件名前加'!'用以标记capture修饰符
-    }
-    // 判断是否有once修饰符
-    if (modifiers.once) {
-      delete modifiers.once
-      name = '~' + name // 给事件名前加'~'用以标记once修饰符
-    }
-    // 判断是否有passive修饰符
-    if (modifiers.passive) {
-      delete modifiers.passive
-      name = '&' + name // 给事件名前加'&'用以标记passive修饰符
-    }
-
-
-    let events
-    if (modifiers.native) {
-      delete modifiers.native
-      events = el.nativeEvents || (el.nativeEvents = {})
-    } else {
-      events = el.events || (el.events = {})
-    }
-
-    const newHandler: any = {
-        value: value.trim()
-      }
-      if (modifiers !== emptyObject) {
-        newHandler.modifiers = modifiers
-      }
-
-      const handlers = events[name]
-      if (Array.isArray(handlers)) {
-        handlers.push(newHandler)
-      } else if (handlers) {
-        events[name] = [handlers, newHandler]
-      } else {
-        events[name] = newHandler
-      }
-
-      el.plain = false
+  // check capture modifier 判断是否有capture修饰符
+  if (modifiers.capture) {
+    delete modifiers.capture
+    name = '!' + name // 给事件名前加'!'用以标记capture修饰符
   }
+  // 判断是否有once修饰符
+  if (modifiers.once) {
+    delete modifiers.once
+    name = '~' + name // 给事件名前加'~'用以标记once修饰符
+  }
+  // 判断是否有passive修饰符
+  if (modifiers.passive) {
+    delete modifiers.passive
+    name = '&' + name // 给事件名前加'&'用以标记passive修饰符
+  }
+
+  let events
+  if (modifiers.native) {
+    delete modifiers.native
+    events = el.nativeEvents || (el.nativeEvents = {})
+  } else {
+    events = el.events || (el.events = {})
+  }
+
+  const newHandler: any = {
+    value: value.trim()
+  }
+  if (modifiers !== emptyObject) {
+    newHandler.modifiers = modifiers
+  }
+
+  const handlers = events[name]
+  if (Array.isArray(handlers)) {
+    handlers.push(newHandler)
+  } else if (handlers) {
+    events[name] = [handlers, newHandler]
+  } else {
+    events[name] = newHandler
+  }
+
+  el.plain = false
+}
 ```
 
 在`addHandler` 函数里做了 3 件事情，首先根据 `modifier` 修饰符对事件名 `name` 做处理，接着根据 `modifier.native` 判断事件是一个浏览器原生事件还是自定义事件，分别对应 `el.nativeEvents` 和 `el.events`，最后按照 `name` 对事件做归类，并把回调函数的字符串保留到对应的事件中。
@@ -114,16 +113,16 @@ el.nativeEvents = {
 
 ```javascript
 export function genData (el state) {
-    let data = '{'
-    // ...
-    if (el.events) {
-        data += `${genHandlers(el.events, false,state.warn)},`
-    }
-    if (el.nativeEvents) {
-        data += `${genHandlers(el.nativeEvents, true, state.warn)},`
-    }
-    // ...
-    return data
+  let data = '{'
+  // ...
+  if (el.events) {
+    data += `${genHandlers(el.events, false,state.warn)},`
+  }
+  if (el.nativeEvents) {
+    data += `${genHandlers(el.nativeEvents, true, state.warn)},`
+  }
+  // ...
+  return data
 }
 ```
 
@@ -131,13 +130,13 @@ export function genData (el state) {
 
 ```javascript
 {
-  	// ...
-    on: {"select": selectHandler},
-  	nativeOn: {"click": function($event) {
-        	return clickHandler($event)
-    	}
+  // ...
+  on: {"select": selectHandler},
+  nativeOn: {"click": function($event) {
+      return clickHandler($event)
     }
-    // ...
+  }
+  // ...
 }
 ```
 
@@ -203,7 +202,7 @@ vm._events = Object.create(null)
 ```javascript
 const listeners = vm.$options._parentListeners
 if (listeners) {
-    updateComponentListeners(vm, listeners)
+  updateComponentListeners(vm, listeners)
 }
 ```
 
@@ -281,24 +280,26 @@ export function updateListeners (
 
 ```javascript
 for (name in on) {
-    def = cur = on[name]
-    old = oldOn[name]
-    event = normalizeEvent(name)
-    if (isUndef(cur)) {
-      process.env.NODE_ENV !== 'production' && warn(
-        `Invalid handler for event "${event.name}": got ` + String(cur),
-        vm
-      )
+  def = cur = on[name]
+  old = oldOn[name]
+  event = normalizeEvent(name)
+  if (isUndef(cur)) {
+    process.env.NODE_ENV !== 'production' && warn(
+      `Invalid handler for event "${event.name}": got ` + String(cur),
+      vm
+    )
+  }
+}
 ```
 
 如果存在，则继续判断该事件名在`oldOn`中是否存在，如果不存在，则调用`add`注册事件，如下：
 
 ```javascript
 if (isUndef(old)) {
-    if (isUndef(cur.fns)) {
-        cur = on[name] = createFnInvoker(cur)
-    }
-    add(event.name, cur, event.once, event.capture, event.passive, event.params)
+  if (isUndef(cur.fns)) {
+    cur = on[name] = createFnInvoker(cur)
+  }
+  add(event.name, cur, event.once, event.capture, event.passive, event.params)
 }
 ```
 
@@ -327,8 +328,8 @@ export function createFnInvoker (fns) {
 
 ```javascript
 if (cur !== old) {
-    old.fns = cur
-    on[name] = old
+  old.fns = cur
+  on[name] = old
 }
 ```
 
