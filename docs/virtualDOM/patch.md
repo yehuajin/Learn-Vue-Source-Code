@@ -163,7 +163,7 @@ function patchVnode (oldVnode, vnode, insertedVnodeQueue, removeOnly) {
   }
   // 若有，vnode的text属性与oldVnode的text属性是否相同？
   else if (oldVnode.text !== vnode.text) {
-    // 若相同：用vnode的text替换真实DOM的文本
+    // 若不相同：则用vnode的text替换真实DOM的文本
     nodeOps.setTextContent(elm, vnode.text)
   }
 }
