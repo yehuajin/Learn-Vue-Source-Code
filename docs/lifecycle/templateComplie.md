@@ -87,7 +87,7 @@ Vue.prototype.$mount = function (el,hydrating) {
 
 ### 2.2 完整版的vm.$mount方法分析
 
-完整版的`vm.$mount`方法定义位于源码的`dist/vue.js`中，如下：
+完整版的`vm.$mount`方法定义位于源码的`src/platforms/web/entry-runtime-with-compiler.js`中，如下：
 
 ```javascript
 var mount = Vue.prototype.$mount;
