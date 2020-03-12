@@ -7,13 +7,13 @@ actionText: 开始学习
 actionLink: /start/
 features:
 - title: 变化侦测篇
-  details: 学习 Vue中如何实现数据的响应式系统，从而达到数据驱动视图。
+  details: 学习 Vue 中如何实现数据的响应式系统，从而达到数据驱动视图。
 - title: 虚拟DOM篇
-  details: 学习什么是虚拟DOM，以及 Vue 中的 DOM-Diff 原理.
+  details: 学习什么是虚拟 DOM ，以及 Vue 中的 DOM-Diff 原理.
 - title: 模板编译篇
-  details: 学习 Vue 内部是怎么把 template 模板编译成虚拟DOM,从而渲染出真实DOM。
+  details: 学习 Vue 内部是怎么把 template 模板编译成虚拟DOM,从而渲染出真实 DOM 。
 - title: 实例方法篇
-  details: 学习 Vue 中所有实例方法(即所有以$开头的方法)的实现原理。
+  details: 学习 Vue 中所有实例方法(即所有以 $ 开头的方法)的实现原理。
 - title: 全局API篇
   details: 学习 Vue 中所有全局 API 的实现原理。
 - title: 生命周期篇
