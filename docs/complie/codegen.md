@@ -78,27 +78,27 @@ ast = {
 4. 到此，整个`AST`就遍历完毕了，我们将得到的代码再包装一下，如下：
 
    ```javascript
-  `
-  with(this){
-    reurn _c(
-      'div',
-      {
-        attrs:{"id":"NLRX"},
-      },
-      [
-        _c(
-          'p',
+    `
+      with(this){
+        reurn _c(
+          'div',
           {
-            attrs:{}
+            attrs:{"id":"NLRX"},
           },
           [
-            _v("Hello "+_s(name))
+            _c(
+              'p',
+              {
+                attrs:{}
+              },
+              [
+                _v("Hello "+_s(name))
+              ]
+            )
           ]
         )
-      ]
-    )
-  }
-  ` 
+      }
+    ` 
    ```
 
 5. 最后，我们将上面得到的这个函数字符串传递给`createFunction `函数（关于这个函数在后面会介绍到），`createFunction `函数会帮我们把得到的函数字符串转换成真正的函数，赋给组件中的`render`选项，从而就是`render`函数了。如下：
