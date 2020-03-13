@@ -66,33 +66,39 @@ ast = {
 2. 根节点`div`有子节点，那么我们进入子节点列表`children`里遍历子节点，发现子节点`p`也是元素型的，那就继续创建元素型`VNode`并将其放入上述代码中根节点的子节点列表中，如下：
 
    ```javascript
-   _c('div',{attrs:{"id":"NLRX"}},[_c('p'),[/*子节点列表*/]])
+   _c('div',{attrs:{"id":"NLRX"}},[_c('p',{attrs:{}},[/*子节点列表*/])])
    ```
 
 3. 同理，继续遍历`p`节点的子节点，发现是一个文本型节点，那就创建一个文本型`VNode`并将其插入到`p`节点的子节点列表中，同理，创建文本型`VNode`我们调用`_v()`方法，如下：
 
    ```javascript
-   _c('div',{attrs:{"id":"NLRX"}},[_c('p'),[_v("Hello "+_s(name))]])
+   _c('div',{attrs:{"id":"NLRX"}},[_c('p',{attrs:{}},[_v("Hello "+_s(name))])])
    ```
 
 4. 到此，整个`AST`就遍历完毕了，我们将得到的代码再包装一下，如下：
 
    ```javascript
-   `
-   with(this){
-       reurn _c(
-           'div',
-           {
-               attrs:{"id":"NLRX"},
-           }
-           [
-               _c('p'),
-               [
-                   _v("Hello "+_s(name))
-               ]
-           ])
-   }
-   `
+  `
+  with(this){
+    reurn _c(
+      'div',
+      {
+        attrs:{"id":"NLRX"},
+      },
+      [
+        _c(
+          'p',
+          {
+            attrs:{}
+          },
+          [
+            _v("Hello "+_s(name))
+          ]
+        )
+      ]
+    )
+  }
+  ` 
    ```
 
 5. 最后，我们将上面得到的这个函数字符串传递给`createFunction `函数（关于这个函数在后面会介绍到），`createFunction `函数会帮我们把得到的函数字符串转换成真正的函数，赋给组件中的`render`选项，从而就是`render`函数了。如下：
