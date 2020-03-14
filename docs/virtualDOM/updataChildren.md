@@ -22,8 +22,6 @@ for (let i = 0; i < newChildren.length; i++) {
 }
 ```
 
-
-
 那么以上这个过程将会存在以下四种情况：
 
 - 创建子节点
@@ -113,7 +111,7 @@ if (isUndef(idxInOld)) {    // 如果在oldChildren里找不到当前循环的ne
 canMove && nodeOps.insertBefore(parentElm, vnodeToMove.elm, oldStartVnode.elm)
 // 等同于
 if(canMove){
-    nodeOps.insertBefore(parentElm, vnodeToMove.elm, oldStartVnode.elm)
+  nodeOps.insertBefore(parentElm, vnodeToMove.elm, oldStartVnode.elm)
 }
 ```
 
@@ -124,4 +122,3 @@ if(canMove){
 本篇文章我们分析了`Vue`在更新子节点时是外层循环`newChildren`数组，内层循环`oldChildren`数组，把`newChildren`数组里的每一个元素分别与`oldChildren`数组里的每一个元素匹配，根据不同情况作出创建子节点、删除子节点、更新子节点以及移动子节点的操作。并且我们对不同情况的不同操作都进行了深入分析，分析之后我们回到源码验证我们分析的正确性，发现我们的分析跟源码的实现是一致的。
 
 最后，我们再思考一个问题：这样双层循环虽然能解决问题，但是如果节点数量很多，这样循环算法的时间复杂度会不会很高？有没有什么可以优化的办法？答案当然是有的，并且`Vue`也意识到了这点，也进行了优化，那么下篇文章我们就来分析当节点数量很多时`Vue`是怎么优化算法的。
-

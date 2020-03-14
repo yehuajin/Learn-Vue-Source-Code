@@ -35,9 +35,9 @@ function createElm (vnode, parentElm, refElm) {
     const children = vnode.children
     const tag = vnode.tag
     if (isDef(tag)) {
-      	vnode.elm = nodeOps.createElement(tag, vnode)   // 创建元素节点
-        createChildren(vnode, children, insertedVnodeQueue) // 创建元素节点的子节点
-        insert(parentElm, vnode.elm, refElm)       // 插入到DOM中
+      vnode.elm = nodeOps.createElement(tag, vnode)   // 创建元素节点
+      createChildren(vnode, children, insertedVnodeQueue) // 创建元素节点的子节点
+      insert(parentElm, vnode.elm, refElm)       // 插入到DOM中
     } else if (isTrue(vnode.isComment)) {
       vnode.elm = nodeOps.createComment(vnode.text)  // 创建注释节点
       insert(parentElm, vnode.elm, refElm)           // 插入到DOM中
@@ -60,18 +60,17 @@ function createElm (vnode, parentElm, refElm) {
 以上就完成了创建节点的操作，其完整流程图如下：
 ![](~@/virtualDOM/2.png)
 
-
 ## 4. 删除节点
 
 如果某些节点再新的`VNode`中没有而在旧的`oldVNode`中有，那么就需要把这些节点从旧的`oldVNode`中删除。删除节点非常简单，只需在要删除节点的父元素上调用`removeChild`方法即可。源码如下：
 
 ```javascript
 function removeNode (el) {
-    const parent = nodeOps.parentNode(el)  // 获取父节点
-    if (isDef(parent)) {
-      nodeOps.removeChild(parent, el)  // 调用父节点的removeChild方法
-    }
+  const parent = nodeOps.parentNode(el)  // 获取父节点
+  if (isDef(parent)) {
+    nodeOps.removeChild(parent, el)  // 调用父节点的removeChild方法
   }
+}
 ```
 
 ## 5. 更新节点
@@ -171,7 +170,6 @@ function patchVnode (oldVnode, vnode, insertedVnodeQueue, removeOnly) {
 
 上面代码里注释已经写得很清晰了，接下来我们画流程图来梳理一下整个过程，流程图如下：
 ![](~@/virtualDOM/3.png)
-
 
 通过对照着流程图以及代码，相信更新节点这部分逻辑你很容易就能理解了。
 
